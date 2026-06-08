@@ -1,0 +1,150 @@
+# PROXY / SQUID / PROTECTION INTERNET
+
+## Squid sur pfSense
+
+### Installation
+
+```text
+System > Package Manager > Available Packages
+
+Installer : Squid
+```
+
+---
+
+# CONFIGURATION SQUID
+
+```text
+Services > Squid Proxy Server
+```
+
+## Général
+
+```text
+Enable Squid Proxy
+Enable Access Log
+Transparent HTTP Proxy
+Enable SSL Filtering
+```
+
+## Cache
+
+```text
+Hard Disk Cache Size : 1024 MB
+```
+
+## Logs
+
+```text
+Rotate Logs : 365
+```
+
+## Blacklist
+
+```text
+ACL > Blacklist
+
+www.yahoo.fr
+facebook.com
+youtube.com
+```
+
+---
+
+# TESTS
+
+## Vérifier accès Internet
+
+```text
+Diagnostics > Ping
+
+www.google.fr
+```
+
+## Vérifier les logs
+
+```text
+Services > Squid Proxy Server > Logs
+```
+
+---
+
+# PFSENSE
+
+## Accès Web
+
+```text
+http://IP_LAN_PFSENSE
+```
+
+## Identifiants
+
+```text
+admin
+pfsense
+```
+
+---
+
+# À RETENIR
+
+```text
+Proxy = Squid
+
+Installation :
+System > Package Manager
+
+Configuration :
+Services > Squid Proxy Server
+
+Options importantes :
+- Enable Squid Proxy
+- Transparent HTTP Proxy
+- SSL Filtering
+- Access Log
+
+Blacklist :
+ACL > Blacklist
+```
+
+---
+
+# DÉPANNAGE
+
+Vérifier :
+
+```text
+1. WAN connecté
+
+2. LAN connecté
+
+3. Client a une IP
+
+4. Passerelle correcte
+
+5. DNS correct
+
+6. Squid activé
+
+7. Site pas dans blacklist
+
+8. Logs Squid
+```
+
+---
+
+# OUTILS DE SÉCURITÉ À CONNAÎTRE
+
+```text
+Firewall  = filtrage réseau
+
+Proxy     = filtrage web
+
+Antivirus = virus
+
+Anti-malware = ransomware, spyware, trojan...
+
+Anti-spam = emails indésirables
+
+VPN = tunnel chiffré
+```
