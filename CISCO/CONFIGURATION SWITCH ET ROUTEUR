@@ -1,0 +1,329 @@
+# SWITCH + ROUTAGE STATIQUE — PROCÉDURE EXAMEN
+
+## CONFIGURATION DE BASE DU SWITCH
+
+### Accéder au mode configuration
+
+```bash
+enable
+
+configure terminal
+```
+
+### Nommer le switch
+
+```bash
+hostname SW1
+```
+
+---
+
+# VLAN
+
+## Créer les VLAN
+
+```bash
+vlan 10
+name RH
+
+vlan 20
+name COMPTA
+```
+
+## Vérifier
+
+```bash
+show vlan brief
+```
+
+---
+
+# AFFECTER DES PORTS AUX VLAN
+
+## VLAN 10
+
+```bash
+interface range fa0/1-10
+
+switchport mode access
+
+switchport access vlan 10
+```
+
+## VLAN 20
+
+```bash
+interface range fa0/11-20
+
+switchport mode access
+
+switchport access vlan 20
+```
+
+---
+
+# CONFIGURATION TRUNK
+
+## Entre switchs ou switch ↔ routeur
+
+```bash
+interface fa0/24
+
+switchport mode trunk
+```
+
+## Vérifier
+
+```bash
+show interfaces trunk
+```
+
+---
+
+# PORT SECURITY
+
+## Configuration rapide
+
+```bash
+interface fa0/5
+
+switchport mode access
+
+switchport port-security
+
+switchport port-security maximum 1
+
+switchport port-security mac-address sticky
+```
+
+## Vérifier
+
+```bash
+show port-security
+
+show port-security interface fa0/5
+```
+
+---
+
+# DÉSACTIVER LES PORTS INUTILISÉS
+
+```bash
+interface range fa0/21-24
+
+shutdown
+```
+
+---
+
+# SAUVEGARDE SWITCH
+
+```bash
+copy running-config startup-config
+```
+
+---
+
+# CONFIGURATION DE BASE ROUTEUR
+
+## Accéder au mode configuration
+
+```bash
+enable
+
+configure terminal
+```
+
+## Nommer le routeur
+
+```bash
+hostname RTR1
+```
+
+---
+
+# CONFIGURER UNE INTERFACE
+
+## Exemple LAN
+
+```bash
+interface g0/0
+
+ip address 192.168.1.1 255.255.255.0
+
+no shutdown
+```
+
+## Exemple WAN
+
+```bash
+interface g0/1
+
+ip address 192.168.2.1 255.255.255.0
+
+no shutdown
+```
+
+## Vérifier
+
+```bash
+show ip interface brief
+```
+
+---
+
+# ROUTAGE STATIQUE
+
+## Ajouter une route
+
+```bash
+ip route 192.168.3.0 255.255.255.0 192.168.2.2
+```
+
+Syntaxe :
+
+```bash
+ip route RESEAU MASQUE NEXT-HOP
+```
+
+## Route par défaut
+
+```bash
+ip route 0.0.0.0 0.0.0.0 192.168.2.2
+```
+
+## Vérifier
+
+```bash
+show ip route
+```
+
+---
+
+# CONFIGURATION PC
+
+## Exemple
+
+```text
+IP : 192.168.1.10
+
+Masque :
+255.255.255.0
+
+Passerelle :
+192.168.1.1
+```
+
+---
+
+# TESTS
+
+## Ping passerelle
+
+```bash
+ping 192.168.1.1
+```
+
+## Ping autre réseau
+
+```bash
+ping 192.168.3.10
+```
+
+## Traceroute
+
+```bash
+tracert 192.168.3.10
+```
+
+---
+
+# DÉPANNAGE
+
+## Switch
+
+```bash
+show vlan brief
+
+show interfaces trunk
+
+show port-security
+
+show running-config
+```
+
+## Routeur
+
+```bash
+show ip interface brief
+
+show ip route
+
+show running-config
+```
+
+Vérifier :
+
+```text
+1. IP correcte
+
+2. Masque correct
+
+3. Passerelle correcte
+
+4. Interface active (no shutdown)
+
+5. VLAN correct
+
+6. Trunk actif
+
+7. Routes présentes
+
+8. Câblage correct
+```
+
+---
+
+# PROCÉDURE TSSR SI ON TE DONNE UN RÉSEAU À MONTER
+
+```text
+1. Configurer les IP
+
+2. Configurer les interfaces
+
+3. no shutdown
+
+4. Créer les VLAN
+
+5. Affecter les ports
+
+6. Configurer le trunk
+
+7. Configurer les routes
+
+8. Tester les pings
+
+9. Sauvegarder
+```
+
+---
+
+# COMMANDES À CONNAÎTRE PAR CŒUR
+
+```bash
+enable
+
+configure terminal
+
+show vlan brief
+
+show interfaces trunk
+
+show ip interface brief
+
+show ip route
+
+copy running-config startup-config
+
+ping
+```
