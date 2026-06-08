@@ -1,0 +1,203 @@
+📌 Installation d’un serveur de fichiers (Windows Server 2019)
+## ⚙️ Installation pas à pas d’un serveur de fichiers
+
+### Étape 1
+
+- Dans le **Gestionnaire de serveur**, cliquer sur **Gérer → Ajouter des rôles et fonctionnalités**.
+
+### Étape 2
+
+- Assistant d’installation → passer l’écran **Avant de commencer** → **Suivant**.
+
+### Étape 3
+
+- Choisir **Installation basée sur un rôle ou une fonctionnalité** → **Suivant**.
+
+### Étape 4
+
+- Sélectionner le **serveur de destination** :
+    - **Sélectionner un serveur du pool de serveurs** → **Suivant**.
+
+### Étape 5
+
+- Dans **Rôles de serveurs** :
+    - Dérouler **Services de fichiers et de stockage**.
+    - Cocher **Services de fichiers** → **Suivant**.
+
+### Étape 6
+
+- Dans **Fonctionnalités**, laisser les sélections par défaut → **Suivant**.
+
+### Étape 7
+
+- Confirmer les sélections → **Installer**.
+
+### Étape 8
+
+- Une fois l’installation terminée → **Fermer l’assistant**.
+- Dans le **Gestionnaire de serveur**, vérifier que le rôle **Services de fichiers et de stockage** apparaît.
+- Depuis ce rôle, possibilité de créer :
+    - Des **volumes**
+    - Des **pools de stockage**
+    - Des **disques virtuels**
+
+
+📌 Configuration d’un serveur de fichiers (Windows Server 2019)
+
+## ⚙️ Configuration d’un serveur de fichiers
+
+### Étape 1 : Initialisation du disque
+
+1. Clic droit sur la barre Windows → **Gestion du disque**.
+2. Identifier le **disque non alloué** → clic droit → **Nouveau volume simple**.
+3. Assistant :
+    - Taille du volume : par défaut.
+    - Lettre du lecteur : laisser par défaut (ex. E).
+    - Formater la partition, nommer le volume (ex. `Fichier-SRV`).
+    - Vérifier le récapitulatif → **Terminer**.
+4. Le disque est maintenant **alloué**.
+
+---
+
+### Étape 2 : Création d’un volume
+
+1. Dans **Services de fichiers et de stockage → Disques** : clic droit → **Nouveau volume**.
+2. Assistant :
+    - Sélectionner le disque configuré.
+    - Taille du volume : par défaut.
+    - Attribuer une lettre (ex. E).
+    - Paramètres système de fichiers : nommer le volume.
+    - Vérifier paramètres → **Créer** → **Fermer**.
+3. Volume prêt à l’usage.
+
+---
+
+## 📦 Création d’un pool de stockage
+
+### Objectif
+
+- Réunir plusieurs disques physiques en **un disque logique**.
+- Fonctionne même avec des disques de tailles différentes.
+- Nécessite **au minimum deux disques**.
+- Permet la **tolérance aux pannes** (duplication des données).
+
+### Étapes
+
+1. **Gestionnaire de serveur → Serveurs → Pools de stockage**.
+2. Clic droit → **Nouveau pool de stockage**.
+3. Donner un nom au pool.
+4. Sélectionner les disques physiques → laisser affectation sur **Automatique**.
+5. Vérifier paramètres → **Créer** → **Fermer**.
+
+---
+
+## 📂 Mettre un système de fichiers en ReFS
+
+### ReFS (Resilient File System)
+
+- Système de fichiers conçu pour la **résilience** et l’intégrité.
+- Détecte et corrige automatiquement certaines corruptions de données.
+- Plus fiable que NTFS pour les gros volumes.
+
+⚠️ Vérifier l’état des disques du pool (mettre en ligne / initialiser si besoin).
+
+### Étapes
+
+1. **Services de fichiers et de stockage → Disques** → clic droit → **Nouveau volume**.
+2. Sélectionner le serveur de disque créé.
+3. Taille du volume → par défaut.
+4. Attribuer une lettre de lecteur (ex. E).
+5. Paramètres système de fichiers → choisir **ReFS**.
+    - Taille d’unité : par défaut.
+    - Nom du volume : ex. `Fichier de Stock`.
+6. Vérifier paramètres → **Créer** → **Fermer**.
+7. Dans **Ce PC → Propriétés**, vérifier que le volume est bien en **ReFS**.
+
+
+📌 Configuration d’un serveur de fichiers selon le schéma AGDLP
+
+## 🔎 Contexte
+
+- **AGDLP** : *Account, Global, Domain Local, Permission*.
+- Méthode Microsoft recommandée pour **contrôler les accès aux ressources** (fichiers, dossiers, imprimantes).
+- Principe :
+    - **A (Account)** : comptes utilisateurs / ordinateurs.
+    - **G (Global)** : groupes globaux (rôles de l’entreprise).
+    - **DL (Domain Local)** : groupes locaux de domaine, appliqués aux ressources.
+    - **P (Permission)** : autorisations NTFS sur dossiers / fichiers.
+
+---
+
+## 🎯 Objectif
+
+- Simplifier et sécuriser la gestion des droits.
+- Éviter la gestion des permissions utilisateur par utilisateur.
+- Faciliter l’administration en **passant par les groupes**.
+
+---
+
+## ⚙️ Création d’un nouveau partage
+
+### Étapes
+
+1. **Gestionnaire de serveur → Services de fichiers et de stockage → Partages → Nouveau partage**.
+2. Choisir **Partage SMB – Rapide** → Suivant.
+    - Autres options : SMB Avancé, SMB Application, NFS Rapide/Avancé.
+3. Sélectionner **Chemin personnalisé** → **Parcourir → Nouveau dossier (ex. Partage)**.
+4. Valider le chemin (ex. `\\SRV-STUDI\Partage`).
+5. Cocher **Activer l’énumération basée sur l’accès** → sécurité renforcée (on n’affiche que ce que l’utilisateur a droit de voir).
+6. **Personnaliser les autorisations** :
+    - Désactiver l’héritage → convertir en autorisations explicites.
+7. Vérifier, confirmer et **Créer**.
+
+---
+
+## 📂 Mise en place du schéma AGDLP
+
+### Étape 1 : Dossiers
+
+- Créer deux sous-dossiers :
+    - `Programmeur Modif`
+    - `Tech Lecture`
+- Ces dossiers correspondent aux **groupes globaux (G)**.
+
+### Étape 2 : Unité d’Organisation (OU)
+
+1. Dans **Outils → Utilisateurs et ordinateurs Active Directory**.
+2. Clic droit sur le domaine (ex. `SRV.STUDI`) → **Nouveau → Unité d’organisation**.
+3. Donner un nom (ex. `OU-Partag-Prom-Tech`).
+
+### Étape 3 : Groupes de domaine local (DL)
+
+- Créer dans l’OU deux groupes **Domaine local** :
+    - `Programmeur Modif` (modification).
+    - `Tech LecEx` (lecture & exécution).
+
+### Étape 4 : Liaisons G → DL
+
+- Ajouter le groupe **Programmeur (G)** dans `Programmeur Modif (DL)`.
+- Ajouter le groupe **Tech (G)** dans `Tech LecEx (DL)`.
+
+Résultat :
+
+- Utilisateurs → Groupes globaux (G).
+- Groupes globaux → Groupes de domaine local (DL).
+- Groupes DL → Permissions NTFS.
+
+---
+
+## 🔐 Configuration des droits NTFS
+
+### Exemple 1 : Programmeur Modif
+
+1. Clic droit sur le dossier `Programmeur Modif` → **Propriétés → Sécurité → Avancé**.
+2. Ajouter → **Sélectionner un principal** → `Programmeur Modif (DL)`.
+3. Cocher **Modification** → OK → Appliquer.
+4. Vérifier que le droit apparaît bien dans l’onglet Sécurité.
+
+### Exemple 2 : Tech Lecture
+
+1. Clic droit sur `Tech Lecture` → **Propriétés → Sécurité → Avancé**.
+2. Ajouter → **Sélectionner un principal** → `Tech LecEx (DL)`.
+3. Cocher **Lecture et exécution** → OK → Appliquer.
+4. Vérifier l’autorisation dans l’onglet Sécurité.
