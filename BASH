@@ -1,1 +1,172 @@
+PRISE EN MAIN BASH 
 
+
+## 🔧 Fonctions Bash
+
+- Une fonction regroupe plusieurs commandes Bash sous un seul nom.
+- Exemple :
+    
+    ```bash
+    bash
+    
+    ma_fonction() {
+      echo "Salut !"
+      date
+    }
+    
+    ```
+    
+
+---
+
+## 🧰 10 Commandes Bash essentielles
+
+| Commande | Description | Exemples & Options |
+| --- | --- | --- |
+| `su` | Se connecter en superutilisateur (root) | `su` → mot de passe requis |
+| `cd` | Changer de répertoire | `cd /usr/bin/cd ..` (parent)`cd -` (précédent)`cd ~` (perso) |
+| `ls` | Lister les fichiers | `lsls -a` (fichiers cachés)`ls -l` (liste détaillée) |
+| `touch` | Créer un fichier | `touch fichier.txt` |
+| `rm` | Supprimer un fichier ou dossier | `rm fichier.txtrm -i` (confirme)`rm -r dossier/` (récursif) |
+| `mkdir` | Créer un dossier | `mkdir mon_dossier` |
+| `more` | Lire un fichier page par page | `more fichier.txt` |
+| `grep` | Rechercher une chaîne dans un fichier | `grep "chaîne" fichier.txt` |
+| `ps` | Voir les processus en cours | `psps u` (détails)`ps ax` (tous les processus) |
+| `kill` | Fermer un processus | `kill PID` (PID via `ps`) |
+| `tar` | Créer ou extraire une archive | `tar -xvf archive.tar` |
+
+
+
+
+
+### 💻 II - Le Shell Scripting
+
+### Structure d’un script Bash
+
+| Élément | Description | Exemple |
+| --- | --- | --- |
+| Shebang | Indique l’interpréteur utilisé, placé en première ligne | `#!/bin/bash` |
+| Commentaires | Tout texte après `#` est ignoré par le Shell | `# Ceci est un commentaire` |
+
+### Rédaction et exécution d’un script
+
+| Étape | Commande / Action |
+| --- | --- |
+| 1. Se positionner | `cd /chemin/de/destination` |
+| 2. Créer le fichier script | `nano nom_script.sh` (ajouter extension `.sh`) |
+| 3. Rendre exécutable | `chmod +x nom_script.sh` |
+| 4. Exécuter | `sh nom_script.sh` ou `./nom_script.sh` |
+
+### ⏰ III - Planificateur de tâches : cron
+
+### Commandes crontab
+
+| Commande | Fonction |
+| --- | --- |
+| `crontab -l` | Liste des tâches planifiées |
+| `crontab -r` | Supprime toutes les tâches planifiées |
+| `crontab -e` | Édite les tâches planifiées |
+
+### Syntaxe crontab
+
+| Champ | Description | Valeurs possibles |
+| --- | --- | --- |
+| Minutes | Minutes d’exécution | 00 à 59 |
+| Heures | Heures d’exécution | 00 à 23 |
+| Jour du mois | Jour d’exécution | 01 à 31 |
+| Mois | Mois d’exécution | 01 à 12 ou jan, feb, mar, ... |
+| Jour de la semaine | Jour d’exécution | 1 à 7 ou mon, tue, wed, ... |
+| Utilisateur | Utilisateur exécutant la tâche (optionnel) | Nom d’utilisateur |
+| Tâche | Commande à exécuter | Chemin/script à lancer |
+| Sortie | Redirection sortie vers fichier log ou mail (optionnel) | `> /chemin/fichier.log` ou rien |
+
+### Symboles utiles en crontab
+
+| Symbole | Fonction | Exemple |
+| --- | --- | --- |
+| `-` | Plage de valeurs | `1-10` (de 1 à 10) |
+| `,` | Liste de valeurs | `1,2,3` |
+| `*` | Toutes les valeurs possibles | `*` |
+| `/` | Intervalle / pas de valeurs ignorées | `*/6` = toutes les 6 unités |
+
+### Exemples
+
+| Cron | Signification |
+| --- | --- |
+| `00 23 * * * /root/scripts/sauvegarde.sh` | Exécution tous les jours à 23h00 |
+| `00 */4 * * * /root/scripts/synchronisation-ftp.sh` | Exécution toutes les 4 heures |
+
+## ⚙️ IV - Rédaction d’un script Bash
+
+### Caractères spéciaux
+
+| Caractères | Utilisation dans le Shell |
+| --- | --- |
+| `?` `*` `&` `<` `>` `'` `~` `"` `^` `{}` `[]` `;` `\` `#` `!` `$` `espace` | Caractères avec une signification particulière à échapper par `\` |
+
+### Commandes composées
+
+| Syntaxe | Description | Exemple |
+| --- | --- | --- |
+| `;` | Enchaîne deux commandes | `commande1 ; commande2` |
+| ` | ` (pipe) | Passe la sortie de la 1ère commande à la 2e |
+| ` |  | ` |
+| `&&` | Exécute la 2e commande si la 1ère réussit | `commande1 && commande2` |
+
+### Variables
+
+| Règle | Exemple |
+| --- | --- |
+| Déclaration | `var='valeur avec espaces'` |
+| Appel | `$var` |
+
+### Conditions
+
+| Structure | Description | Exemple |
+| --- | --- | --- |
+| `if ... then ... fi` | Exécute si condition vraie | `bash if test; then actions; fi` |
+| `if ... then ... else ... fi` | Sinon faire autre chose | `bash if test; then actions; else autres_actions; fi` |
+| `if ... then ... elif ... else ... fi` | Condition supplémentaire | `bash if cond1; then actions; elif cond2; then autres_actions; else actions; fi` |
+
+### Structure `case`
+
+| Syntaxe | Description |
+| --- | --- |
+| `bash case valeur in cas1) action1;; cas2) action2;; esac` | Permet de gérer plusieurs cas selon la valeur donnée |
+
+### Boucles
+
+| Boucle | Description | Syntaxe |
+| --- | --- | --- |
+| `for` | Itère sur une liste d’éléments | `bash for elem in $liste; do actions; done` |
+| `while` | Exécute tant que la condition est vraie | `bash while test; do actions; done` |
+| `until` | Exécute tant que la condition est fausse | `bash until test; do actions; done` |
+
+## 🛠️ V - Bonnes pratiques pour écrire un script
+
+1. **Définir précisément l’objectif du script**
+2. **Lister et détailler les étapes nécessaires**
+3. **Définir clairement les variables à utiliser**
+4. **Rechercher et tester les commandes nécessaires**
+5. **Affiner avec des filtres ou commandes composées**
+6. **Assembler les commandes dans le script avec variables, conditions, boucles**
+7. **Tester le script sur plusieurs configurations**
+8. **Corriger les erreurs**
+9. **Commenter abondamment pour garder la compréhension**
+
+---
+
+## 📂 VI - Exemple simple de script d’automatisation de sauvegarde
+
+```bash
+bash
+
+#!/bin/bash
+dayJ=$(date +%Y-%m-%d)          # Date du jour au format AAAA-MM-JJ
+rep_sauvegarde="/home/studi/sauvegarde"
+
+echo "Début de la sauvegarde"
+tar -czf $rep_sauvegarde/sauvegarde-$dayJ.tar.gz /home/studi/dossier_a_sauvegarder
+echo "Sauvegarde terminée"
+
+```
