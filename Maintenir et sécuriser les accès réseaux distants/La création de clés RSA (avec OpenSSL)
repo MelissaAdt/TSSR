@@ -1,0 +1,216 @@
+# OPENSSL RSA — PROCÉDURE EXAMEN
+
+## ÉTAPE 1 — VÉRIFIER OPENSSL
+
+```bash
+openssl version
+```
+
+Si absent :
+
+```bash
+apt update
+apt install openssl -y
+```
+
+---
+
+# ÉTAPE 2 — GÉNÉRER LA CLÉ PRIVÉE RSA
+
+```bash
+openssl genrsa -out rsa.pem 1024
+```
+
+Vérifier :
+
+```bash
+ls
+```
+
+Résultat :
+
+```text
+rsa.pem
+```
+
+---
+
+# ÉTAPE 3 — AFFICHER LA CLÉ PRIVÉE
+
+```bash
+cat rsa.pem
+```
+
+---
+
+# ÉTAPE 4 — AFFICHER LES INFORMATIONS DE LA CLÉ
+
+```bash
+openssl rsa -in rsa.pem -text -noout
+```
+
+Permet de vérifier :
+
+```text
+Type RSA
+
+Taille
+
+Modulus
+
+Exposant
+```
+
+---
+
+# ÉTAPE 5 — PROTÉGER LA CLÉ PRIVÉE
+
+```bash
+openssl rsa -in rsa.pem -des3 -out rsa.pem
+```
+
+Saisir :
+
+```text
+Passphrase
+
+Confirmation
+```
+
+Vérification :
+
+```bash
+openssl rsa -in rsa.pem -text -noout
+```
+
+Une passphrase sera demandée.
+
+---
+
+# ÉTAPE 6 — EXPORTER LA CLÉ PUBLIQUE
+
+```bash
+openssl rsa -in rsa.pem -pubout -out rsa-public.pem
+```
+
+Résultat :
+
+```text
+rsa-public.pem
+```
+
+---
+
+# ÉTAPE 7 — VÉRIFIER LA CLÉ PUBLIQUE
+
+```bash
+openssl rsa -in rsa-public.pem -pubin
+```
+
+---
+
+# ÉTAPE 8 — AFFICHER LA CLÉ PUBLIQUE
+
+```bash
+cat rsa-public.pem
+```
+
+---
+
+# VÉRIFIER LES FICHIERS
+
+```bash
+ls -l
+```
+
+Résultat attendu :
+
+```text
+rsa.pem
+
+rsa-public.pem
+```
+
+---
+
+# DÉPANNAGE
+
+## Vérifier OpenSSL
+
+```bash
+openssl version
+```
+
+## Vérifier les fichiers
+
+```bash
+ls
+```
+
+## Vérifier la clé privée
+
+```bash
+openssl rsa -in rsa.pem -text -noout
+```
+
+## Vérifier la clé publique
+
+```bash
+openssl rsa -in rsa-public.pem -pubin
+```
+
+---
+
+# PROCÉDURE COMPLÈTE À RETENIR
+
+```bash
+openssl genrsa -out rsa.pem 1024
+
+openssl rsa -in rsa.pem -text -noout
+
+openssl rsa -in rsa.pem -des3 -out rsa.pem
+
+openssl rsa -in rsa.pem -pubout -out rsa-public.pem
+
+openssl rsa -in rsa-public.pem -pubin
+```
+
+---
+
+# CE QU'IL FAUT SAVOIR À L'ORAL
+
+```text
+RSA = chiffrement asymétrique
+
+Clé publique = chiffrer
+
+Clé privée = déchiffrer
+
+OpenSSL = création et gestion des clés RSA
+
+Ne jamais partager la clé privée
+
+Toujours protéger la clé privée avec une passphrase
+```
+
+---
+
+# SI ON TE DEMANDE DE CRÉER UNE CLÉ RSA
+
+```bash
+apt install openssl -y
+
+openssl genrsa -out rsa.pem 1024
+
+openssl rsa -in rsa.pem -pubout -out rsa-public.pem
+
+ls
+```
+
+Tu auras :
+
+```text
+rsa.pem          → clé privée
+
+rsa-public.pem   → clé publique
+```
