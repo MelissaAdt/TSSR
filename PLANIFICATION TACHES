@@ -1,0 +1,86 @@
+
+
+### 🔧 Fonctionnement de Crontab
+
+- Utilisé pour planifier l’exécution automatique de scripts/commandes Bash.
+- Commande de base : `crontab -e`
+
+### 🧱 Syntaxe Crontab
+
+```bash
+bash
+
+minute heure jour-du-mois mois jour-de-la-semaine commande
+
+```
+
+| Champ | Valeur possible |
+| --- | --- |
+| Minute | 0–59 |
+| Heure | 0–23 |
+| Jour du mois | 1–31 |
+| Mois | 1–12 |
+| Jour de la semaine | 0 (dimanche) – 6 (samedi) |
+
+### Exemple : Exécuter un script tous les lundis à 22h
+
+```bash
+bash
+
+0 22 * * 1 /chemin/vers/script.sh
+
+```
+
+➡️ 💡 *Utilise le site : https://crontab-generator.com/fr pour générer ta ligne CRON !*
+
+### 🛠️ Gérer les tâches Crontab
+
+| Action | Commande |
+| --- | --- |
+| Créer/modifier | `crontab -e` |
+| Voir les tâches | `crontab -l` |
+| Supprimer | `crontab -r` |
+| Vérifier fichier utilisateur | `cat /var/spool/cron/crontabs/<utilisateur>` |
+
+### 🔁 Exemples pratiques
+
+| Fréquence | Ligne Crontab |
+| --- | --- |
+| Toutes les heures | `0 * * * * /script.sh` |
+| Tous les jours à minuit | `0 0 * * * /script.sh` |
+| Chaque lundi à 15h | `0 15 * * 1 /script.sh` |
+| Tous les jours à 8h30 | `30 8 * * * /script.sh` |
+| Toutes les 30 minutes | `*/30 * * * * /script.sh` |
+| Tous les samedis à 2h | `0 2 * * 6 /script.sh` |
+| Le 1er du mois à midi | `0 12 1 * * /script.sh` |
+| Jours ouvrables, chaque heure | `0 * * * 1-5 /script.sh` |
+| Chaque quart d’heure | `*/15 * * * * /script.sh` |
+| Tous les 1er janvier à minuit | `0 0 1 1 * /script.sh` |
+
+## 🪟 Planification sous **Windows** avec **Task Scheduler**
+
+### 🧭 Interface du Planificateur
+
+- **Volet gauche** : navigation (Bibliothèque, Microsoft, Windows)
+- **Volet central** : détails des tâches (général, déclencheurs, actions…)
+- **Volet droit** : actions (créer, exécuter, supprimer, logs)
+
+---
+
+### 🛠️ Créer une tâche planifiée
+
+1. Ouvrir **Planificateur de tâches**
+2. Cliquer sur **Créer une tâche de base**
+3. Donner un nom + description
+4. Choisir la **fréquence** (quotidien, hebdomadaire…)
+5. Sélectionner **Action** → « Exécuter un programme »
+6. Définir :
+    - Programme : `powershell`
+    - Argument : `File "C:\chemin\vers\script.ps1"`
+7. Terminer
+
+### 🧪 Modifier / Supprimer une tâche
+
+- Modifier : double-clic sur la tâche > modifier paramètres
+- Supprimer : clic droit > Supprimer
+
