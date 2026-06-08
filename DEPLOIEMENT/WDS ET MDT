@@ -1,0 +1,456 @@
+📘 WDS (Windows Deployment Services)
+FICHE PRATIQUE TSSR — INSTALLER ET DÉPLOYER WINDOWS PAR PXE
+
+⚠️ Si l'examinateur te demande :
+
+"Installe WDS et déploie Windows sur un poste"
+
+Tu suis exactement cette procédure.
+
+🎯 OBJECTIF
+
+Déployer Windows par le réseau (PXE) sans clé USB.
+
+🧱 PRÉREQUIS
+
+Serveur :
+
+Windows Server
+AD installé
+DNS installé
+DHCP installé
+IP fixe
+
+Client :
+
+Boot PXE activé
+Même réseau
+🧱 ÉTAPE 1 — INSTALLER LE RÔLE WDS
+
+Ouvrir :
+
+Gestionnaire de serveur
+
+Puis :
+
+Ajouter des rôles et fonctionnalités
+
+Choisir :
+
+Installation basée sur un rôle
+
+Sélectionner le serveur.
+
+Cocher :
+
+Services de déploiement Windows (WDS)
+
+Installer.
+
+🧱 ÉTAPE 2 — CONFIGURER WDS
+
+Ouvrir :
+
+Outils
+
+Services de déploiement Windows
+
+Clic droit :
+
+Nom du serveur
+
+Puis :
+
+Configurer le serveur
+🧱 ÉTAPE 3 — CHOISIR LE DOSSIER REMINST
+
+Exemple :
+
+D:\RemoteInstall
+
+ou
+
+C:\RemoteInstall
+
+Suivant.
+
+🧱 ÉTAPE 4 — CONFIGURATION DHCP
+
+Si DHCP sur le même serveur :
+
+Cocher :
+
+Ne pas écouter sur le port 67
+
+et
+
+Configurer l'option DHCP 60
+
+Suivant.
+
+🧱 ÉTAPE 5 — RÉPONDRE AUX CLIENTS PXE
+
+Choisir :
+
+Répondre à tous les ordinateurs
+
+Terminer.
+
+🧱 ÉTAPE 6 — AJOUTER L'IMAGE DE BOOT
+
+Développer :
+
+Images de démarrage
+
+Clic droit :
+
+Ajouter une image de démarrage
+
+Parcourir l'ISO Windows.
+
+Chemin :
+
+sources\boot.wim
+
+Ajouter.
+
+🧱 ÉTAPE 7 — AJOUTER L'IMAGE D'INSTALLATION
+
+Développer :
+
+Images d'installation
+
+Créer un groupe :
+
+Windows10
+
+ou
+
+Windows11
+
+Ajouter :
+
+sources\install.wim
+
+Choisir l'édition :
+
+Pro
+Entreprise
+
+Terminer.
+
+🧱 ÉTAPE 8 — DÉMARRER LES SERVICES
+
+Vérifier :
+
+Get-Service WDSServer
+
+ou
+
+Services
+
+↓
+
+WDSServer
+
+↓
+
+Running
+🧱 ÉTAPE 9 — CONFIGURER LE CLIENT PXE
+
+Carte réseau :
+
+Boot PXE activé
+
+ou
+
+Network Boot
+
+Démarrer.
+
+🧱 ÉTAPE 10 — DÉPLOIEMENT
+
+Le client affiche :
+
+Press F12 for Network Service Boot
+
+Appuyer :
+
+F12
+
+Choisir :
+
+Boot.wim
+
+Choisir :
+
+Windows 10 Pro
+
+Suivant.
+
+Installation Windows.
+
+🔍 VÉRIFICATIONS
+
+Depuis le serveur :
+
+WDS
+
+↓
+
+Images de démarrage
+
+↓
+
+boot.wim
+Images d'installation
+
+↓
+
+install.wim
+🚨 PANNES FRÉQUENTES
+PXE-E53
+DHCP absent
+Aucun boot PXE
+Carte réseau non configurée
+Aucune image trouvée
+boot.wim absent
+🎯 CE QUI TOMBE LE PLUS SOUVENT
+Installation WDS
+
+Configuration serveur
+
+Ajout boot.wim
+
+Ajout install.wim
+
+Boot PXE
+📘 MDT (Microsoft Deployment Toolkit)
+FICHE PRATIQUE TSSR
+
+⚠️ MDT est souvent utilisé AVEC WDS.
+
+WDS = démarrage PXE
+
+MDT = automatisation du déploiement.
+
+🎯 OBJECTIF
+
+Déployer Windows automatiquement avec :
+
+OS
+
+Logiciels
+
+Pilotes
+
+Paramètres
+🧱 ÉTAPE 1 — INSTALLER MDT
+
+Télécharger :
+
+Microsoft Deployment Toolkit
+
+Installer :
+
+MDT
+
+Installer aussi :
+
+Windows ADK
+
+et
+
+Windows PE Add-on
+🧱 ÉTAPE 2 — CRÉER UN DEPLOYMENT SHARE
+
+Ouvrir :
+
+Deployment Workbench
+
+Clic droit :
+
+Deployment Shares
+
+↓
+
+New Deployment Share
+
+Chemin :
+
+D:\DeploymentShare
+
+Nom :
+
+DeploymentShare$
+
+Suivant.
+
+Terminer.
+
+🧱 ÉTAPE 3 — IMPORTER WINDOWS
+
+Développer :
+
+Operating Systems
+
+Clic droit :
+
+Import Operating System
+
+Choisir :
+
+Full set of source files
+
+Sélectionner l'ISO Windows.
+
+Importer.
+
+🧱 ÉTAPE 4 — IMPORTER LES APPLICATIONS
+
+Développer :
+
+Applications
+
+Ajouter :
+
+Firefox
+
+VLC
+
+7-Zip
+
+LibreOffice
+🧱 ÉTAPE 5 — CRÉER UNE TASK SEQUENCE
+
+Clic droit :
+
+Task Sequences
+
+↓
+
+New Task Sequence
+
+ID :
+
+TS001
+
+Nom :
+
+Windows11
+
+Choisir :
+
+Standard Client Task Sequence
+
+Sélectionner :
+
+Windows 11
+
+Mot de passe administrateur.
+
+Terminer.
+
+🧱 ÉTAPE 6 — GÉNÉRER LES IMAGES MDT
+
+Clic droit :
+
+Deployment Share
+
+↓
+
+Update Deployment Share
+
+MDT génère :
+
+LiteTouchPE_x64.wim
+
+et
+
+LiteTouchPE_x64.iso
+🧱 ÉTAPE 7 — AJOUTER MDT DANS WDS
+
+Dans WDS :
+
+Images de démarrage
+
+Ajouter :
+
+LiteTouchPE_x64.wim
+🧱 ÉTAPE 8 — DÉMARRER LE CLIENT
+
+Boot PXE.
+
+F12.
+
+Choisir :
+
+LiteTouchPE
+
+MDT démarre.
+
+🧱 ÉTAPE 9 — CHOISIR LA TASK SEQUENCE
+
+Choisir :
+
+Windows11
+
+ou
+
+TS001
+
+Suivant.
+
+Déploiement automatique.
+
+🔍 VÉRIFICATIONS
+Deployment Share créé
+OS importé
+Task Sequence créée
+LiteTouchPE.wim généré
+Image ajoutée dans WDS
+🎯 CHECKLIST EXAMEN
+WDS
+□ Rôle installé
+
+□ Serveur configuré
+
+□ boot.wim ajouté
+
+□ install.wim ajouté
+
+□ PXE fonctionnel
+
+□ Déploiement OK
+MDT
+□ MDT installé
+
+□ ADK installé
+
+□ Deployment Share créé
+
+□ OS importé
+
+□ Applications importées
+
+□ Task Sequence créée
+
+□ Update Deployment Share
+
+□ LiteTouchPE.wim généré
+
+□ WIM ajouté dans WDS
+
+□ Déploiement automatique OK
+
+Pour le TSSR, si un sujet "déploiement" tombe, il est beaucoup plus probable qu'on te demande WDS seul ou FOG, que de configurer un MDT complet de zéro. Par contre, savoir expliquer la chaîne :
+
+MDT → génère LiteTouchPE.wim
+        ↓
+WDS → distribue l'image PXE
+        ↓
+Client → boot réseau
+        ↓
+Installation automatique Windows
+
+est très utile.
