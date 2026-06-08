@@ -1,0 +1,206 @@
+# DROITS / PARTAGES / SAMBA
+
+## Permissions Linux
+
+### Voir les droits
+
+```bash
+ls -l
+```
+
+### Modifier les droits
+
+```bash
+chmod 755 fichier
+chmod 644 fichier
+chmod 777 fichier
+```
+
+### Modifier le propriétaire
+
+```bash
+chown user fichier
+```
+
+### Modifier le groupe
+
+```bash
+chgrp groupe fichier
+```
+
+### Permissions spéciales
+
+```bash
+chmod u+s fichier
+chmod g+s repertoire
+chmod +t repertoire
+```
+
+---
+
+# ACL
+
+### Ajouter un droit à un utilisateur
+
+```bash
+setfacl -m u:user:rwx /dossier
+```
+
+### Ajouter un droit à un groupe
+
+```bash
+setfacl -m g:groupe:rwx /dossier
+```
+
+### Voir les ACL
+
+```bash
+getfacl /dossier
+```
+
+---
+
+# NFS
+
+## Installation
+
+```bash
+apt install nfs-kernel-server -y
+```
+
+## Configuration
+
+```bash
+nano /etc/exports
+```
+
+Exemple :
+
+```bash
+/srv/nfs/shared 192.168.1.0/24(rw,sync,no_subtree_check)
+```
+
+## Appliquer
+
+```bash
+exportfs -a
+systemctl restart nfs-kernel-server
+```
+
+## Montage client
+
+```bash
+mount -t nfs 192.168.1.10:/srv/nfs/shared /mnt/nfs
+```
+
+---
+
+# SAMBA
+
+## Installation
+
+```bash
+apt update
+apt install samba samba-common-bin -y
+```
+
+## Sauvegarde config
+
+```bash
+cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
+```
+
+## Créer le dossier partagé
+
+```bash
+mkdir -p /home/shared/partage
+chown root:root /home/shared/partage
+chmod 755 /home/shared/partage
+```
+
+## Ajouter un utilisateur Samba
+
+```bash
+smbpasswd -a user
+```
+
+## Configuration
+
+```bash
+nano /etc/samba/smb.conf
+```
+
+Exemple :
+
+```bash
+[Partage]
+path = /home/shared/partage
+valid users = user
+read only = no
+browseable = yes
+inherit permissions = yes
+```
+
+## Chiffrement SMB
+
+```bash
+smb encrypt = mandatory
+```
+
+## Vérifier la config
+
+```bash
+testparm
+```
+
+## Redémarrer Samba
+
+```bash
+systemctl restart smbd
+```
+
+## Vérifier Samba
+
+```bash
+systemctl status smbd
+```
+
+## Pare-feu
+
+```bash
+ufw allow Samba
+```
+
+---
+
+# DÉPANNAGE EXAMEN
+
+```bash
+ls -l
+chmod
+chown
+chgrp
+
+getfacl
+setfacl
+
+testparm
+
+systemctl restart smbd
+systemctl status smbd
+
+journalctl -u smbd
+
+smbstatus
+
+cat /etc/samba/smb.conf
+```
+
+---
+
+# FICHIERS À CONNAÎTRE
+
+```bash
+/etc/samba/smb.conf
+/etc/exports
+```
