@@ -1,0 +1,247 @@
+🧱 ÉTAPE 1 — Vérifier que RDS fonctionne
+
+Sur le serveur :
+
+Gestionnaire de serveur
+
+Vérifier :
+
+Services Bureau à distance
+
+Puis :
+
+Collections
+
+Vérifier que :
+
+QuickSessionCollection
+
+existe.
+
+🧱 ÉTAPE 2 — Télécharger l'application
+
+Depuis le serveur RDS :
+
+Télécharger :
+
+Firefox
+LibreOffice
+VLC
+FileZilla
+7-Zip
+
+ou récupérer le fichier :
+
+.exe
+.msi
+🧱 ÉTAPE 3 — Passer le serveur en mode installation
+
+Ouvrir :
+
+cmd
+
+Administrateur.
+
+Vérifier le mode :
+
+change user /query
+
+Passer en mode installation :
+
+change user /install
+
+Résultat :
+
+User session is ready to install applications
+🧱 ÉTAPE 4 — Installer l'application
+
+Exemple :
+
+FirefoxSetup.exe
+
+ou
+
+7z.exe
+
+Lancer :
+
+Suivant
+Suivant
+Installer
+Terminer
+🧱 ÉTAPE 5 — Revenir en mode exécution
+
+Très important.
+
+Dans CMD :
+
+change user /execute
+
+Résultat :
+
+User session is ready to execute applications
+🧱 ÉTAPE 6 — Vérifier l'installation
+
+Vérifier l'exécutable.
+
+Exemple :
+
+C:\Program Files\Mozilla Firefox
+
+Présence de :
+
+firefox.exe
+
+Exemple 7-Zip :
+
+C:\Program Files\7-Zip
+
+Présence de :
+
+7zFM.exe
+🧱 ÉTAPE 7 — Ouvrir la collection RDS
+
+Ouvrir :
+
+Gestionnaire de serveur
+
+Puis :
+
+Services Bureau à distance
+
+Puis :
+
+Collections
+
+Puis :
+
+QuickSessionCollection
+🧱 ÉTAPE 8 — Publier l'application
+
+Dans :
+
+Programmes RemoteApp
+
+Cliquer :
+
+Tâches
+
+Puis :
+
+Publier des programmes RemoteApp
+🧱 ÉTAPE 9 — Sélectionner l'application
+
+Exemple :
+
+Firefox
+
+ou
+
+VLC
+
+ou
+
+LibreOffice
+
+ou
+
+FileZilla
+
+Cliquer :
+
+Suivant
+🧱 ÉTAPE 10 — Publier
+
+Vérifier le récapitulatif.
+
+Cliquer :
+
+Publier
+🧱 ÉTAPE 11 — Vérifier
+
+Retourner dans :
+
+QuickSessionCollection
+
+Puis :
+
+Programmes RemoteApp
+
+L'application doit apparaître.
+
+Exemple :
+
+Firefox
+🧱 ÉTAPE 12 — Tester côté client
+
+Depuis un poste du domaine.
+
+Ouvrir :
+
+URL RemoteApp
+
+Exemple :
+
+https://srv-rds/RDWeb
+
+Se connecter :
+
+DOMAINE\Utilisateur
+
+Exemple :
+
+MAIRIE\melissa
+🧱 ÉTAPE 13 — Lancer l'application
+
+Cliquer :
+
+Firefox
+
+ou
+
+VLC
+
+Résultat :
+
+L'application s'ouvre
+
+mais elle tourne sur le serveur RDS.
+
+🔧 MÉTHODE POWERSHELL (si demandé)
+Import du module
+Import-Module RemoteDesktop
+Publication
+New-RDRemoteApp `
+-Alias "7zip" `
+-DisplayName "7zip" `
+-FilePath "C:\Program Files\7-Zip\7zFM.exe" `
+-ShowInWebAccess 1 `
+-CollectionName "QuickSessionCollection" `
+-ConnectionBroker "srvrds.test.local"
+✅ VÉRIFICATIONS FINALES
+
+Vérifier :
+
+QuickSessionCollection
+
+↓
+
+Programmes RemoteApp
+
+↓
+
+Application présente
+
+
+Vérifier depuis le client :
+
+```text
+RDWeb
+
+↓
+
+Application visible
+
+↓
+
+Application fonctionnelle
