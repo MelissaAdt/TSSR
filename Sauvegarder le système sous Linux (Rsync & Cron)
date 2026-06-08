@@ -1,0 +1,117 @@
+# RSYNC
+
+## Installation
+
+```bash
+sudo apt update
+sudo apt install rsync -y
+```
+
+## Sauvegarde locale
+
+```bash
+rsync -av /source/ /destination/
+```
+
+Exemple :
+
+```bash
+rsync -av /home/Travail/ /tmp/Travail/
+```
+
+## Sauvegarde distante SSH
+
+```bash
+rsync -e ssh -avz /source/ user@IP:/destination/
+```
+
+Exemple :
+
+```bash
+rsync -e ssh -avz /home/Travail/ geoff@192.168.100.20:/tmp/Travail/
+```
+
+## Vérification
+
+```bash
+ls /tmp/Travail
+```
+
+## Connexion SSH
+
+```bash
+ssh geoff@192.168.100.20
+```
+
+---
+
+# CRON
+
+## Vérifier le service
+
+```bash
+systemctl status cron
+```
+
+## Démarrer le service
+
+```bash
+sudo systemctl start cron
+```
+
+## Modifier la crontab
+
+```bash
+crontab -e
+```
+
+## Afficher les tâches
+
+```bash
+crontab -l
+```
+
+## Syntaxe
+
+```bash
+minute heure jour mois jour_semaine commande
+```
+
+## Toutes les 5 minutes
+
+```bash
+*/5 * * * * commande
+```
+
+## Sauvegarde Rsync toutes les 5 min
+
+```bash
+*/5 * * * * rsync -e ssh -avz /home/Travail/ geoff@192.168.100.20:/tmp/Travail/
+```
+
+## Redémarrer Cron
+
+```bash
+sudo systemctl restart cron
+```
+
+## Logs
+
+```bash
+tail -f /var/log/cron.log
+```
+
+---
+
+# À CONNAÎTRE PAR CŒUR
+
+```bash
+rsync -av source destination
+rsync -e ssh -avz source user@IP:destination
+
+crontab -e
+crontab -l
+
+*/5 * * * * commande
+0 2 * * * commande
+```
