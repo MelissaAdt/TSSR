@@ -1,0 +1,248 @@
+# SSH PAR CLÉS SOUS WINDOWS — PROCÉDURE EXAMEN
+
+## ÉTAPE 1 — VÉRIFIER OPENSSH
+
+Windows :
+
+```text id="ruy95g"
+Paramètres
+
+→ Système
+
+→ Fonctionnalités facultatives
+
+→ Vérifier :
+
+Client OpenSSH
+Serveur OpenSSH
+```
+
+---
+
+# ÉTAPE 2 — GÉNÉRER LES CLÉS
+
+Ouvrir PowerShell Administrateur :
+
+```powershell id="s4wx4w"
+ssh-keygen -t ed25519
+```
+
+Valider :
+
+```text id="n3rq0i"
+Chemin par défaut
+
+C:\Users\USER\.ssh\
+```
+
+Ajouter une passphrase.
+
+---
+
+# ÉTAPE 3 — VÉRIFIER LES CLÉS
+
+```powershell id="1m3t0p"
+ls ~/.ssh
+```
+
+Résultat :
+
+```text id="7g5e5j"
+id_ed25519
+
+id_ed25519.pub
+```
+
+---
+
+# ÉTAPE 4 — ACTIVER SSH-AGENT
+
+PowerShell Administrateur :
+
+```powershell id="mwb0ys"
+Get-Service ssh-agent | Set-Service -StartupType Manual
+```
+
+Démarrer :
+
+```powershell id="m8dq3u"
+Start-Service ssh-agent
+```
+
+Vérifier :
+
+```powershell id="0eiv9v"
+Get-Service ssh-agent
+```
+
+Résultat :
+
+```text id="xj39j7"
+Running
+```
+
+---
+
+# ÉTAPE 5 — CHARGER LA CLÉ
+
+```powershell id="a6uw7h"
+ssh-add $env:USERPROFILE\.ssh\id_ed25519
+```
+
+ou
+
+```powershell id="r7o0v7"
+ssh-add C:\Users\Melissa\.ssh\id_ed25519
+```
+
+Entrer la passphrase.
+
+---
+
+# ÉTAPE 6 — COPIER LA CLÉ PUBLIQUE SUR LE SERVEUR
+
+## Linux
+
+```bash id="qibzqf"
+ssh-copy-id user@IP_SERVEUR
+```
+
+ou
+
+```bash id="b4np3o"
+cat ~/.ssh/id_ed25519.pub
+```
+
+Copier le contenu dans :
+
+```bash id="9bk7wf"
+~/.ssh/authorized_keys
+```
+
+---
+
+# ÉTAPE 7 — TESTER LA CONNEXION
+
+```powershell id="w9a3f3"
+ssh user@IP_SERVEUR
+```
+
+Exemple :
+
+```powershell id="6s1km5"
+ssh melissa@192.168.1.10
+```
+
+Résultat :
+
+```text id="95h0qq"
+Connexion sans mot de passe
+```
+
+---
+
+# CONFIGURATION SERVEUR SSH
+
+## Fichier
+
+```bash id="4lk9q6"
+/etc/ssh/sshd_config
+```
+
+## Autoriser les clés
+
+```text id="0f2v87"
+PubkeyAuthentication yes
+```
+
+## Désactiver les mots de passe
+
+```text id="j6mqug"
+PasswordAuthentication no
+```
+
+## Appliquer
+
+```bash id="f1c9s0"
+systemctl restart ssh
+```
+
+---
+
+# DÉPANNAGE
+
+## Vérifier SSH
+
+```bash id="d6ztzn"
+systemctl status ssh
+```
+
+## Vérifier les clés
+
+```powershell id="qzzmuu"
+ls ~/.ssh
+```
+
+## Vérifier ssh-agent
+
+```powershell id="c1ep9f"
+Get-Service ssh-agent
+```
+
+## Vérifier les clés chargées
+
+```powershell id="y6wrqf"
+ssh-add -l
+```
+
+---
+
+# PROCÉDURE COMPLÈTE À RETENIR
+
+```text id="a7mg8h"
+1. Générer les clés
+
+ssh-keygen -t ed25519
+
+2. Vérifier
+
+ls ~/.ssh
+
+3. Activer ssh-agent
+
+Get-Service ssh-agent | Set-Service -StartupType Manual
+
+Start-Service ssh-agent
+
+4. Charger la clé
+
+ssh-add ~/.ssh/id_ed25519
+
+5. Copier la clé publique sur le serveur
+
+ssh-copy-id user@IP
+
+6. Tester
+
+ssh user@IP
+```
+
+---
+
+# À RETENIR POUR L'ORAL
+
+```text id="r5yppd"
+Clé publique :
+sur le serveur
+
+Clé privée :
+sur le client
+
+Passphrase :
+protège la clé privée
+
+SSH :
+TCP 22
+
+Authentification plus sécurisée qu'un mot de passe
+```
