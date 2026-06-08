@@ -1,0 +1,251 @@
+# DMZ PFSENSE — PROCÉDURE EXAMEN
+
+## ÉTAPE 1 — CONFIGURER LES CARTES RÉSEAU
+
+### pfSense
+
+```text
+Carte 1 = WAN = Accès par pont
+
+Carte 2 = LAN = Réseau interne "LAN"
+
+Carte 3 = DMZ = Réseau interne "DMZ"
+```
+
+### Client LAN
+
+```text
+Réseau interne "LAN"
+```
+
+### Serveur DMZ
+
+```text
+Réseau interne "DMZ"
+```
+
+---
+
+# ÉTAPE 2 — CONFIGURER LES INTERFACES PFSENSE
+
+## WAN
+
+```text
+DHCP
+```
+
+## LAN
+
+```text
+IP : 192.168.10.1/24
+```
+
+## DMZ
+
+```text
+Interfaces
+→ Assignments
+→ Add
+
+OPT1
+→ Enable
+
+Description : DMZ
+
+IPv4 :
+192.168.20.1/24
+
+Save
+Apply
+```
+
+---
+
+# ÉTAPE 3 — CONFIGURER LES MACHINES
+
+## Client LAN
+
+```text
+IP : 192.168.10.10
+
+Masque :
+255.255.255.0
+
+Passerelle :
+192.168.10.1
+
+DNS :
+8.8.8.8
+```
+
+## Serveur DMZ
+
+```text
+IP : 192.168.20.10
+
+Masque :
+255.255.255.0
+
+Passerelle :
+192.168.20.1
+
+DNS :
+8.8.8.8
+```
+
+---
+
+# ÉTAPE 4 — CRÉER LES RÈGLES FIREWALL
+
+## LAN
+
+Autoriser Internet
+
+```text
+LAN → WAN = PASS
+```
+
+## DMZ
+
+Autoriser Internet
+
+```text
+DMZ → WAN = PASS
+```
+
+Bloquer accès LAN
+
+```text
+DMZ → LAN = BLOCK
+```
+
+## WAN
+
+```text
+WAN → LAN = BLOCK
+```
+
+---
+
+# ÉTAPE 5 — PUBLIER LE SERVEUR WEB
+
+```text
+Firewall
+→ NAT
+→ Port Forward
+→ Add
+```
+
+Configuration :
+
+```text
+Interface :
+WAN
+
+Protocol :
+TCP
+
+Destination Port :
+80
+
+Redirect Target IP :
+192.168.20.10
+
+Redirect Target Port :
+80
+
+Add Associated Filter Rule
+```
+
+Puis :
+
+```text
+Save
+Apply
+```
+
+HTTPS :
+
+```text
+Port 443
+→ 192.168.20.10
+→ Port 443
+```
+
+---
+
+# ÉTAPE 6 — TESTS
+
+## Depuis le LAN
+
+```text
+Ping Internet = OK
+```
+
+## Depuis le serveur DMZ
+
+```text
+Ping Internet = OK
+```
+
+## Depuis la DMZ
+
+```text
+Accès au LAN = INTERDIT
+```
+
+## Depuis Internet
+
+```text
+Accès site web DMZ = OK
+```
+
+---
+
+# DÉPANNAGE
+
+Vérifier dans cet ordre :
+
+```text
+1. WAN connecté
+
+2. LAN = 192.168.10.1
+
+3. DMZ = 192.168.20.1
+
+4. IP serveur DMZ correcte
+
+5. Passerelle serveur DMZ = 192.168.20.1
+
+6. NAT configuré
+
+7. Règle Firewall créée
+
+8. Logs pfSense
+```
+
+```text
+Status
+→ System Logs
+→ Firewall
+```
+
+---
+
+# SCHÉMA À RETENIR
+
+```text
+          INTERNET
+              |
+             WAN
+              |
+          pfSense
+          /     \
+         /       \
+       LAN       DMZ
+
+192.168.10.0   192.168.20.0
+```
+
+---
+
