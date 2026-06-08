@@ -1,0 +1,380 @@
+# ROUTAGE STATIQUE ET DYNAMIQUE — FICHE PRATIQUE TSSR
+
+⚠️ Pour l'épreuve pratique de 1h30, concentre-toi surtout sur :
+
+* Configuration d'interfaces
+* Routage statique
+* Vérifications
+* Dépannage
+
+RIP / OSPF / EIGRP = connaître les bases et la configuration minimale.
+
+---
+
+# 1. CONFIGURER UN ROUTEUR
+
+## Accès
+
+```bash
+enable
+
+configure terminal
+```
+
+## Nommer le routeur
+
+```bash
+hostname RTR1
+```
+
+---
+
+# 2. CONFIGURER LES INTERFACES
+
+## Routeur A
+
+### Réseau LAN
+
+```bash
+interface g0/0
+
+ip address 192.168.1.1 255.255.255.0
+
+no shutdown
+```
+
+### Lien vers autre routeur
+
+```bash
+interface g0/1
+
+ip address 10.0.0.1 255.255.255.252
+
+no shutdown
+```
+
+---
+
+## Routeur B
+
+### Réseau LAN
+
+```bash
+interface g0/0
+
+ip address 192.168.2.1 255.255.255.0
+
+no shutdown
+```
+
+### Lien vers routeur A
+
+```bash
+interface g0/1
+
+ip address 10.0.0.2 255.255.255.252
+
+no shutdown
+```
+
+---
+
+# 3. VÉRIFIER LES INTERFACES
+
+```bash
+show ip interface brief
+```
+
+Résultat attendu :
+
+```text
+Interface      IP-Address      Status
+G0/0           192.168.1.1     up
+G0/1           10.0.0.1        up
+```
+
+Si down :
+
+```bash
+interface g0/x
+
+no shutdown
+```
+
+---
+
+# 4. CONFIGURER LE ROUTAGE STATIQUE
+
+## Routeur A
+
+Pour joindre le réseau B :
+
+```bash
+ip route 192.168.2.0 255.255.255.0 10.0.0.2
+```
+
+Signification :
+
+```text
+192.168.2.0 = réseau à atteindre
+
+255.255.255.0 = masque
+
+10.0.0.2 = prochain routeur
+```
+
+---
+
+## Routeur B
+
+Pour joindre le réseau A :
+
+```bash
+ip route 192.168.1.0 255.255.255.0 10.0.0.1
+```
+
+---
+
+# 5. ROUTE PAR DÉFAUT
+
+Utilisée pour Internet.
+
+```bash
+ip route 0.0.0.0 0.0.0.0 10.0.0.2
+```
+
+---
+
+# 6. VÉRIFIER LES ROUTES
+
+```bash
+show ip route
+```
+
+Une route statique apparaît avec :
+
+```text
+S
+```
+
+Exemple :
+
+```text
+S 192.168.2.0/24 [1/0] via 10.0.0.2
+```
+
+---
+
+# 7. CONFIGURATION DES PC
+
+## PC Réseau A
+
+```text
+IP : 192.168.1.10
+
+Masque :
+255.255.255.0
+
+Passerelle :
+192.168.1.1
+```
+
+## PC Réseau B
+
+```text
+IP : 192.168.2.10
+
+Masque :
+255.255.255.0
+
+Passerelle :
+192.168.2.1
+```
+
+---
+
+# 8. TESTS
+
+## Tester la passerelle
+
+```bash
+ping 192.168.1.1
+```
+
+## Tester le routeur voisin
+
+```bash
+ping 10.0.0.2
+```
+
+## Tester l'autre réseau
+
+```bash
+ping 192.168.2.10
+```
+
+---
+
+# 9. DÉPANNAGE
+
+## Vérifier interfaces
+
+```bash
+show ip interface brief
+```
+
+## Vérifier routes
+
+```bash
+show ip route
+```
+
+## Vérifier configuration
+
+```bash
+show running-config
+```
+
+---
+
+# CHECKLIST TSSR ROUTAGE STATIQUE
+
+Toujours vérifier :
+
+```text
+□ IP correcte
+
+□ Masque correct
+
+□ Passerelle correcte
+
+□ Interfaces UP
+
+□ no shutdown
+
+□ Route statique présente
+
+□ Ping routeur voisin OK
+
+□ Ping réseau distant OK
+```
+
+---
+
+# RIP (SI DEMANDÉ)
+
+## Activation
+
+```bash
+router rip
+
+version 2
+
+network 192.168.1.0
+
+network 10.0.0.0
+```
+
+## Vérification
+
+```bash
+show ip route
+```
+
+Routes RIP :
+
+```text
+R
+```
+
+---
+
+# OSPF (SI DEMANDÉ)
+
+## Activation
+
+```bash
+router ospf 1
+
+network 192.168.1.0 0.0.0.255 area 0
+
+network 10.0.0.0 0.0.0.3 area 0
+```
+
+## Vérification
+
+```bash
+show ip ospf neighbor
+
+show ip route
+```
+
+Routes OSPF :
+
+```text
+O
+```
+
+---
+
+# EIGRP (SI DEMANDÉ)
+
+## Activation
+
+```bash
+router eigrp 1
+
+network 192.168.1.0
+
+network 10.0.0.0
+
+no auto-summary
+```
+
+## Vérification
+
+```bash
+show ip eigrp neighbors
+
+show ip route
+```
+
+Routes EIGRP :
+
+```text
+D
+```
+
+---
+
+# CE QUI A LE PLUS DE CHANCES DE TOMBER
+
+Niveau TSSR :
+
+```text
+1. Configuration IP des interfaces
+
+2. no shutdown
+
+3. Routage statique
+
+4. Route par défaut
+
+5. show ip route
+
+6. Ping
+
+7. Dépannage
+```
+
+Moins probable :
+
+```text
+OSPF
+
+EIGRP
+
+RIP
+```
+
+S'ils te demandent du routage dans la pratique, dans 90 % des cas tu seras sur du routage statique, du routeur-on-a-stick ou du routage inter-VLAN.
