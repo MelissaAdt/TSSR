@@ -1,0 +1,1055 @@
+# RDS / CLIENT LÉGER - FICHE PRATIQUE TSSR
+
+⚠️ Pour l'épreuve pratique de 1h30, retiens surtout :
+
+* Installation du rôle RDS
+* Déploiement rapide
+* Session-based desktop
+* Configuration des licences
+* Test RemoteApp / RDP
+
+---
+
+# 1. PRÉREQUIS
+
+## Serveurs
+
+```text
+SRV-AD
+- AD DS
+- DNS
+- DHCP
+
+SRV-RDS
+- Membre du domaine
+- IP fixe
+```
+
+## Vérifications
+
+```text
+□ IP fixe
+
+□ Ping DC OK
+
+□ Domaine joint
+
+□ DNS du DC configuré
+
+□ Nom machine défini
+```
+
+---
+
+# 2. JOINDRE LE SERVEUR AU DOMAINE
+
+Vérifier :
+
+```powershell
+ipconfig /all
+```
+
+Tester :
+
+```powershell
+ping dc01
+```
+
+Joindre le domaine :
+
+```text
+Paramètres système
+
+Modifier
+
+Domaine
+
+redémarrer
+```
+
+---
+
+# 3. INSTALLER LE RÔLE RDS
+
+Ouvrir :
+
+```text
+Gestionnaire de serveur
+```
+
+Puis :
+
+```text
+Ajouter des rôles et fonctionnalités
+```
+
+Choisir :
+
+```text
+Services Bureau à distance
+```
+
+---
+
+# 4. CHOISIR LE DÉPLOIEMENT
+
+Sélectionner :
+
+```text
+Installation Services Bureau à distance
+```
+
+Puis :
+
+```text
+Démarrage rapide
+```
+
+Puis :
+
+```text
+Déploiement de bureaux basés sur une session
+```
+
+---
+
+# 5. CHOISIR LE SERVEUR
+
+Sélectionner :
+
+```text
+SRV-RDS
+```
+
+Puis :
+
+```text
+Suivant
+
+Installer
+```
+
+Cocher :
+
+```text
+Redémarrage automatique si nécessaire
+```
+
+Attendre la fin.
+
+---
+
+# 6. RÉCUPÉRER L'URL RDS
+
+À la fin :
+
+```text
+Services Bureau à distance
+```
+
+Noter :
+
+```text
+URL Web Access
+```
+
+Exemple :
+
+```text
+https://srv-rds/RDWeb
+```
+
+---
+
+# 7. CONFIGURER LES LICENCES
+
+Ouvrir :
+
+```text
+Gestionnaire de serveur
+
+Services Bureau à distance
+```
+
+Puis :
+
+```text
+Tâches
+
+Modifier les propriétés du déploiement
+```
+
+---
+
+# 8. CONFIGURER LE MODE DE LICENCE
+
+Choisir :
+
+```text
+Licence Utilisateur
+```
+
+ou
+
+```text
+Licence Appareil
+```
+
+Rappel :
+
+```text
+Utilisateur = personne nomade
+
+Appareil = poste partagé
+```
+
+---
+
+# 9. AJOUTER LE SERVEUR DE LICENCES
+
+Sélectionner :
+
+```text
+Serveur de licences RDS
+```
+
+Puis :
+
+```text
+Appliquer
+
+OK
+```
+
+---
+
+# 10. VÉRIFIER LE SERVICE
+
+Ouvrir :
+
+```powershell
+services.msc
+```
+
+Vérifier :
+
+```text
+Remote Desktop Services
+```
+
+État :
+
+```text
+Running
+```
+
+---
+
+# 11. AUTORISER LE RDP
+
+Vérifier :
+
+```text
+Système
+
+Bureau à distance
+
+Activer
+```
+
+Port :
+
+```text
+3389
+```
+
+---
+
+# 12. TEST DE CONNEXION RDP
+
+Depuis un client :
+
+```powershell
+mstsc
+```
+
+Adresse :
+
+```text
+IP_SERVEUR_RDS
+```
+
+Exemple :
+
+```text
+192.168.1.20
+```
+
+Connexion :
+
+```text
+Utilisateur domaine
+
+Mot de passe
+```
+
+---
+
+# 13. TEST REMOTEAPP
+
+Depuis le client :
+
+```text
+https://srv-rds/RDWeb
+```
+
+Connexion :
+
+```text
+DOMAINE\utilisateur
+```
+
+Lancer l'application publiée.
+
+---
+
+# DÉPANNAGE
+
+## Vérifier IP
+
+```powershell
+ipconfig
+```
+
+## Vérifier DNS
+
+```powershell
+nslookup dc01
+```
+
+## Vérifier accès DC
+
+```powershell
+ping dc01
+```
+
+## Vérifier port RDP
+
+```powershell
+Test-NetConnection IP_SERVEUR -Port 3389
+```
+
+## Vérifier services
+
+```powershell
+services.msc
+```
+
+## Vérifier pare-feu
+
+```text
+Règle Bureau à distance activée
+```
+
+---
+
+# CHECKLIST EXAMEN
+
+```text
+□ IP fixe
+
+□ Domaine joint
+
+□ DNS OK
+
+□ Ping DC OK
+
+□ Rôle RDS installé
+
+□ Déploiement rapide
+
+□ Session-based desktop
+
+□ Redémarrage effectué
+
+□ URL RDWeb récupérée
+
+□ Licences configurées
+
+□ Port 3389 ouvert
+
+□ Test mstsc OK
+
+□ Test RDWeb OK
+```
+
+---
+
+# COMMANDES À CONNAÎTRE
+
+```powershell
+ipconfig
+
+ping
+
+nslookup
+
+mstsc
+
+Test-NetConnection IP -Port 3389
+```
+
+---
+
+# À RETENIR
+
+```text
+RDS = Bureau à distance Microsoft
+
+RDP = protocole utilisé
+
+Port RDP = 3389
+
+RDWeb = portail web des applications
+
+CAL = licence d'accès
+
+Licence utilisateur = utilisateur nomade
+
+Licence appareil = poste partagé
+```
+
+
+
+
+# RDS - PROFILS UTILISATEURS, COLLECTIONS ET RESSOURCES LOCALES
+
+# FICHE PRATIQUE TSSR (1H30)
+
+⚠️ Cette fiche est la suite de l'installation RDS.
+
+Le but :
+
+* Autoriser des utilisateurs à se connecter
+* Créer des profils itinérants RDS (VHDX)
+* Configurer les groupes
+* Configurer la collection
+* Tester la connexion
+
+---
+
+# 1. CRÉER LES OBJETS ACTIVE DIRECTORY
+
+Sur le contrôleur de domaine.
+
+Ouvrir :
+
+```text
+Outils
+
+Utilisateurs et ordinateurs Active Directory
+```
+
+---
+
+## Créer une OU
+
+```text
+Nom : RDS
+```
+
+---
+
+## Créer un groupe
+
+```text
+Grp_RDS
+```
+
+Type :
+
+```text
+Sécurité
+```
+
+---
+
+## Créer un utilisateur
+
+Exemple :
+
+```text
+Jean Aimar
+```
+
+ou
+
+```text
+Melissa
+```
+
+---
+
+# 2. AJOUTER L'UTILISATEUR AU GROUPE
+
+Ouvrir :
+
+```text
+Utilisateur
+
+Membre de
+
+Ajouter
+```
+
+Ajouter :
+
+```text
+Grp_RDS
+```
+
+Vérifier :
+
+```text
+Utilisateur ∈ Grp_RDS
+```
+
+---
+
+# 3. OUVRIR LA COLLECTION RDS
+
+Sur le serveur RDS.
+
+Ouvrir :
+
+```text
+Gestionnaire de serveur
+
+Services Bureau à distance
+
+Collections
+```
+
+Sélectionner :
+
+```text
+QuickSessionCollection
+```
+
+---
+
+# 4. AUTORISER LES UTILISATEURS
+
+Dans :
+
+```text
+Tâches
+
+Modifier les propriétés
+```
+
+---
+
+## Groupes d'utilisateurs
+
+Ajouter :
+
+```text
+Grp_RDS
+```
+
+Valider.
+
+Résultat :
+
+```text
+Tous les membres de Grp_RDS peuvent ouvrir une session RDS.
+```
+
+---
+
+# 5. CONFIGURER LES LIMITES DE SESSION
+
+Dans :
+
+```text
+Paramètres de session
+```
+
+Configurer si demandé :
+
+```text
+Déconnexion après inactivité
+
+Fin de session
+
+Limites de temps
+```
+
+Pour l'examen :
+
+```text
+Laisser les paramètres par défaut.
+```
+
+---
+
+# 6. CRÉER LE DOSSIER DES PROFILS
+
+Sur le serveur RDS.
+
+Créer :
+
+```text
+D:\Profils_RDS
+```
+
+ou
+
+```text
+C:\Profils_RDS
+```
+
+---
+
+# 7. PARTAGER LE DOSSIER
+
+Clic droit :
+
+```text
+Propriétés
+
+Partage avancé
+```
+
+Partager :
+
+```text
+Profils_RDS
+```
+
+---
+
+## Droits
+
+Ajouter :
+
+```text
+Grp_RDS
+```
+
+Autoriser :
+
+```text
+Modification
+
+Lecture
+
+Écriture
+```
+
+---
+
+# 8. ACTIVER LES USER PROFILE DISKS
+
+Toujours dans :
+
+```text
+QuickSessionCollection
+
+Tâches
+
+Modifier les propriétés
+```
+
+---
+
+Onglet :
+
+```text
+Disques de profil utilisateur
+```
+
+Cocher :
+
+```text
+Activer les disques de profil utilisateur
+```
+
+---
+
+Chemin :
+
+```text
+\\SRV-RDS\Profils_RDS
+```
+
+Exemple :
+
+```text
+\\SRV-RDS\Profils_RDS
+```
+
+ou
+
+```text
+\\192.168.1.20\Profils_RDS
+```
+
+---
+
+Valider.
+
+---
+
+# 9. TESTER UNE CONNEXION RDS
+
+Depuis un client.
+
+Ouvrir :
+
+```powershell
+mstsc
+```
+
+Connexion :
+
+```text
+SRV-RDS
+```
+
+ou
+
+```text
+192.168.1.20
+```
+
+---
+
+Authentification :
+
+```text
+DOMAINE\utilisateur
+```
+
+Exemple :
+
+```text
+MAIRIE\melissa
+```
+
+---
+
+# 10. CRÉER UN FICHIER TEST
+
+Une fois connecté :
+
+Créer :
+
+```text
+Dossier Test
+```
+
+sur le bureau.
+
+Déconnexion.
+
+---
+
+# 11. VÉRIFIER LA CRÉATION DU PROFIL
+
+Sur le serveur RDS.
+
+Ouvrir :
+
+```text
+\\SRV-RDS\Profils_RDS
+```
+
+Tu dois voir :
+
+```text
+UVHD-S-1-5-21-XXXXXXXX.vhdx
+```
+
+ou
+
+```text
+SID_UTILISATEUR.vhdx
+```
+
+---
+
+# 12. RETROUVER LE SID
+
+Depuis la session RDS :
+
+```cmd
+whoami /user
+```
+
+Résultat :
+
+```text
+Nom utilisateur
+
+SID
+```
+
+Exemple :
+
+```text
+S-1-5-21-123456789...
+```
+
+Le SID doit correspondre au fichier VHDX.
+
+---
+
+# 13. CONFIGURER UNE GPO RDS
+
+Sur le contrôleur de domaine.
+
+Ouvrir :
+
+```text
+Gestion des stratégies de groupe
+```
+
+---
+
+Clic droit :
+
+```text
+OU RDS
+
+Créer un objet GPO
+```
+
+---
+
+# 14. CHEMIN IMPORTANT
+
+```text
+Configuration ordinateur
+
+Stratégies
+
+Modèles d'administration
+
+Composants Windows
+
+Services Bureau à distance
+
+Hôte de session Bureau à distance
+```
+
+---
+
+# 15. APPLIQUER LA GPO
+
+Exemple :
+
+```text
+Définir le répertoire de base utilisateur
+```
+
+Activer.
+
+Indiquer :
+
+```text
+\\SRV-RDS\Profils_RDS
+```
+
+---
+
+# 16. APPLIQUER LES STRATÉGIES
+
+Depuis le client :
+
+```cmd
+gpupdate /force
+```
+
+---
+
+# 17. VÉRIFIER LES GPO
+
+```cmd
+gpresult /r
+```
+
+Vérifier que la GPO apparaît.
+
+---
+
+# 18. AUTORISER LES RESSOURCES LOCALES
+
+Sur le client.
+
+Ouvrir :
+
+```powershell
+mstsc
+```
+
+---
+
+Avant connexion :
+
+```text
+Afficher les options
+
+Ressources locales
+```
+
+---
+
+Cliquer :
+
+```text
+Autres
+```
+
+---
+
+Cocher si demandé :
+
+```text
+Disques
+
+Imprimantes
+
+Presse-papiers
+
+Ports USB
+```
+
+---
+
+Connexion.
+
+Les ressources apparaissent dans la session RDS.
+
+---
+
+# DÉPANNAGE
+
+## Utilisateur refusé
+
+Vérifier :
+
+```text
+Grp_RDS
+```
+
+---
+
+## Profil non créé
+
+Vérifier :
+
+```text
+Partage
+
+Permissions
+
+Chemin UNC
+```
+
+---
+
+## GPO non appliquée
+
+```cmd
+gpupdate /force
+
+gpresult /r
+```
+
+---
+
+## Impossible de se connecter
+
+```cmd
+ping serveur
+
+nslookup serveur
+```
+
+Puis :
+
+```powershell
+Test-NetConnection SERVEUR -Port 3389
+```
+
+---
+
+# CHECKLIST EXAMEN
+
+```text
+□ OU RDS créée
+
+□ Groupe Grp_RDS créé
+
+□ Utilisateur créé
+
+□ Utilisateur ajouté au groupe
+
+□ Collection QuickSessionCollection ouverte
+
+□ Groupe ajouté dans la collection
+
+□ Dossier partagé créé
+
+□ User Profile Disk activé
+
+□ Chemin UNC configuré
+
+□ Connexion RDP testée
+
+□ whoami /user exécuté
+
+□ VHDX créé
+
+□ GPO créée
+
+□ gpupdate /force exécuté
+
+□ gpresult /r vérifié
+
+□ Ressources locales configurées
+```
+
+---
+
+# COMMANDES À CONNAÎTRE
+
+```cmd
+whoami /user
+
+gpupdate /force
+
+gpresult /r
+
+ping
+
+nslookup
+```
+
+---
+
+# CE QUI A LE PLUS DE CHANCES DE TOMBER
+
+```text
+1. Ajouter un utilisateur à une collection RDS
+
+2. Activer les User Profile Disks
+
+3. Vérifier la création du VHDX
+
+4. Tester une connexion mstsc
+
+5. Appliquer une GPO RDS
+```
