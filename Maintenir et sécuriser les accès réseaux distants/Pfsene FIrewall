@@ -1,0 +1,194 @@
+# PFSENSE / FIREWALL
+
+## Interfaces
+
+### WAN
+
+```text
+IP : 192.168.56.254/24
+Gateway : 192.168.56.1
+```
+
+### LAN
+
+```text
+IP : 192.168.1.254/24
+Gateway : aucune
+```
+
+---
+
+# ACCÈS WEB
+
+```text
+http://192.168.1.254
+```
+
+```text
+Utilisateur : admin
+Mot de passe : pfsense
+```
+
+---
+
+# DNS
+
+```text
+8.8.8.8
+1.1.1.1
+```
+
+---
+
+# RÈGLES FIREWALL
+
+## Bloquer le ping
+
+```text
+Firewall > Rules > LAN > Add
+
+Action : Block
+Protocol : ICMP
+```
+
+## Autoriser SSH
+
+```text
+Action : Pass
+Protocol : TCP
+Port : 22
+```
+
+## Autoriser HTTP
+
+```text
+Action : Pass
+Protocol : TCP
+Port : 80
+```
+
+## Autoriser HTTPS
+
+```text
+Action : Pass
+Protocol : TCP
+Port : 443
+```
+
+---
+
+# NAT
+
+## Redirection HTTP vers serveur web
+
+```text
+Firewall > NAT > Port Forward
+
+Interface : WAN
+Protocol : TCP
+Destination Port : 80
+Redirect Target IP : 192.168.1.10
+Redirect Target Port : 80
+```
+
+## Redirection HTTPS
+
+```text
+Firewall > NAT > Port Forward
+
+Port WAN : 443
+IP interne : 192.168.1.10
+Port interne : 443
+```
+
+---
+
+# DHCP
+
+## Activer DHCP
+
+```text
+Services > DHCP Server > LAN
+Enable DHCP Server
+```
+
+## Exemple plage
+
+```text
+192.168.1.100
+à
+192.168.1.200
+```
+
+## Passerelle
+
+```text
+192.168.1.254
+```
+
+## DNS
+
+```text
+8.8.8.8
+1.1.1.1
+```
+
+---
+
+# DIAGNOSTIC
+
+## Tester Internet depuis pfSense
+
+```text
+Diagnostics > Ping
+```
+
+## Voir les baux DHCP
+
+```text
+Status > DHCP Leases
+```
+
+## Voir les règles
+
+```text
+Firewall > Rules
+```
+
+## Voir les logs
+
+```text
+Status > System Logs
+```
+
+---
+
+# À CONNAÎTRE POUR LE TSSR
+
+```text
+WAN = Internet
+LAN = Réseau interne
+
+admin / pfsense
+
+Firewall > Rules
+Firewall > NAT
+
+Services > DHCP Server
+
+Status > DHCP Leases
+Status > System Logs
+
+Diagnostics > Ping
+```
+
+## Ports
+
+```text
+SSH   = 22
+HTTP  = 80
+HTTPS = 443
+DNS   = 53
+DHCP  = 67/68
+RDP   = 3389
+```
