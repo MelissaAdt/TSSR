@@ -1,0 +1,218 @@
+## ⚙️ **Installation du serveur Nginx**
+
+### 🧩 Contexte
+
+Nginx est un **serveur web open source** ultra performant, capable de :
+
+- servir des sites web 🌍
+- agir comme **proxy inverse**, **cache HTTP**, **équilibreur de charge**
+- et même de servir de **proxy mail** (IMAP, POP3, SMTP) ✉️
+
+Créé par **Igor Sysoev** en 2002, Nginx (prononcé *Engine-X*) se distingue par sa **rapidité** et sa **faible consommation mémoire**, grâce à une **architecture événementielle** capable de gérer **des milliers de connexions simultanées** dans un seul thread.
+
+> 🧠 En résumé : Nginx = puissance, légèreté et évolutivité 🔥
+> 
+
+---
+
+### 🪄 Méthode
+
+### **Étape 1 :**
+
+Ouvrir le **Terminal** via **Activités**.
+
+### **Étape 2 :**
+
+Deux façons d’y accéder :
+
+- en tapant « Terminal » dans la barre de recherche 🔍
+- ou via les **Utilitaires** du système.
+
+Une fenêtre de ligne de commande (OpenSSH) s’ouvre : vous êtes prêt à installer Nginx !
+
+---
+
+### **Étape 3 :**
+
+Avant l’installation, **mettre à jour les paquets** :
+
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+
+```
+
+💡 *Rappel :*
+
+- `update` → met à jour la liste des paquets disponibles.
+- `upgrade` → installe les améliorations disponibles.
+
+---
+
+### **Étape 4 :**
+
+Installer le serveur Nginx :
+
+```bash
+sudo apt-get install nginx
+
+```
+
+### **Étape 5 :**
+
+Pendant l’installation, le système demande une confirmation :
+
+👉 Tapez **O** (pour Oui) puis **Entrée**.
+
+---
+
+## ⚙️ **Configuration du serveur Nginx**
+
+### 🪄 Méthode
+
+### **Étape 1 :**
+
+Aller dans le dossier de configuration :
+
+```bash
+cd /etc/nginx/
+
+```
+
+### **Étape 2 :**
+
+Lister le contenu pour vérifier la présence de `sites-available` :
+
+```bash
+ls
+
+```
+
+---
+
+### **Étape 3 :**
+
+Entrer dans le dossier :
+
+```bash
+cd sites-available
+
+```
+
+Puis vérifier son contenu :
+
+```bash
+ls
+
+```
+
+✅ On y trouve le fichier **default** (la configuration du site par défaut).
+
+---
+
+### **Étape 4 :**
+
+Ouvrir le fichier avec l’éditeur de texte **nano** :
+
+```bash
+nano default
+
+```
+
+### **Étape 5 :**
+
+Rechercher la ligne :
+
+```
+server_name
+
+```
+
+et la modifier selon le nom de domaine ou l’adresse IP souhaitée.
+
+> 💡 Si aucun DNS n’est configuré, tu peux laisser un exemple de nom symbolique et sauvegarder (Ctrl + X, puis O, puis Entrée).
+> 
+
+---
+
+### **Étape 6 :**
+
+Revenir à la racine du terminal :
+
+```bash
+cd
+
+```
+
+### **Étape 7 :**
+
+Se rendre dans le dossier contenant les fichiers HTML :
+
+```bash
+cd /var/www/
+ls
+
+```
+
+👉 Tu verras un dossier nommé **html**.
+
+---
+
+### **Étape 8 :**
+
+Entrer dans le dossier et vérifier le fichier principal :
+
+```bash
+cd html
+ls
+
+```
+
+✅ Tu trouveras `index.html` (ou `index.nginx-debian.html`).
+
+---
+
+### **Étape 9 :**
+
+Modifier la page d’accueil :
+
+```bash
+nano index.nginx-debian.html
+
+```
+
+Ajouter par exemple :
+
+```html
+<h1>Bienvenue chez GOOGLE NGINX</h1>
+
+```
+
+💾 Sauvegarder avec **Ctrl + X**, puis **O**, puis **Entrée**.
+
+---
+
+### **Étape 10 :**
+
+Ouvrir ton **navigateur web** via **Activités** → sélectionner ton navigateur préféré.
+
+### **Étape 11 :**
+
+Dans la barre d’adresse, taper :
+
+```
+127.0.0.1
+
+```
+
+ou
+
+```
+localhost
+
+```
+
+✅ Ton site Nginx s’affiche avec ton message personnalisé 🎉
+
+---
+
