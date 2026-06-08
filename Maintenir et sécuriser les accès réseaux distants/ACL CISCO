@@ -193,3 +193,205 @@ ip access-group 100 in
 
 show access-lists
 ```
+
+
+# ACL CISCO - MÉMO EXAMEN
+
+## Vérification
+
+```bash
+show access-lists
+show running-config
+show ip route
+show ip interface brief
+```
+
+---
+
+# ACL STANDARD
+
+## Créer
+
+```bash
+access-list 1 deny host 172.16.1.10
+access-list 1 permit any
+```
+
+## Appliquer
+
+```bash
+interface fa0/0
+ip access-group 1 in
+```
+
+ou
+
+```bash
+interface fa0/0
+ip access-group 1 out
+```
+
+## Supprimer
+
+```bash
+no access-list 1
+```
+
+---
+
+# ACL ÉTENDUE
+
+## HTTP + HTTPS uniquement
+
+```bash
+access-list 100 permit tcp any host 192.168.1.10 eq 80
+access-list 100 permit tcp any host 192.168.1.10 eq 443
+access-list 100 deny ip any any
+```
+
+## Bloquer SSH
+
+```bash
+access-list 100 deny tcp any host 192.168.1.10 eq 22
+```
+
+## Bloquer Ping
+
+```bash
+access-list 100 deny icmp any any
+```
+
+## Autoriser Ping
+
+```bash
+access-list 100 permit icmp any any
+```
+
+## Appliquer
+
+```bash
+interface fa0/0
+ip access-group 100 in
+```
+
+---
+
+# ACL NOMMÉE
+
+## Création
+
+```bash
+ip access-list extended web
+
+deny icmp host 192.168.1.10 host 192.168.100.2
+
+permit tcp host 192.168.1.10 host 192.168.100.2 eq 80
+
+permit tcp host 192.168.1.10 host 192.168.100.2 eq 443
+
+permit ip host 192.168.1.10 host 172.16.1.10
+
+permit ip host 192.168.1.20 host 172.16.1.20
+
+exit
+```
+
+## Application
+
+```bash
+interface fa0/0
+ip access-group web in
+```
+
+---
+
+# ROUTAGE STATIQUE
+
+## Route simple
+
+```bash
+ip route RESEAU MASQUE NEXT-HOP
+```
+
+Exemple :
+
+```bash
+ip route 172.16.1.0 255.255.255.0 10.10.10.2
+```
+
+## Route par défaut
+
+```bash
+ip route 0.0.0.0 0.0.0.0 10.10.10.2
+```
+
+Vérification :
+
+```bash
+show ip route
+show ip route static
+```
+
+---
+
+# INTERFACES
+
+```bash
+interface fa0/0
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+```
+
+```bash
+interface s0/1/0
+ip address 10.10.10.1 255.255.255.252
+clock rate 64000
+no shutdown
+```
+
+---
+
+# SAUVEGARDE
+
+```bash
+copy running-config startup-config
+```
+
+---
+
+# ORDRE À RETENIR
+
+```text
+1. ACL lue de haut en bas
+
+2. Première correspondance gagnante
+
+3. deny implicite à la fin
+
+4. ACL Standard = IP source uniquement
+
+5. ACL Étendue = source + destination + protocole + port
+
+6. Standard proche destination
+
+7. Étendue proche source
+```
+
+---
+
+# PORTS À CONNAÎTRE
+
+```text
+FTP    21
+SSH    22
+TELNET 23
+SMTP   25
+DNS    53
+HTTP   80
+POP3   110
+IMAP   143
+HTTPS  443
+RDP    3389
+DHCP   67/68
+```
+
