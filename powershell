@@ -1,0 +1,413 @@
+
+
+### 💡 **Structure d'une commande PowerShell**
+
+Exemple :
+
+Get-EventLog -LogName Security -ComputerName WIN10,SERVER2 -Verbose
+
+- `Get-EventLog` → Nom de la cmdlet
+- `LogName` → Paramètre
+- `Security` → Valeur
+- `ComputerName` → Paramètre multivalué
+- `Verbose` → Paramètre booléen
+
+### 🔟 **10 commandes PowerShell utiles**
+
+| Commande | Description |
+| --- | --- |
+| `Get-Help` | Obtenir de l’aide sur une commande |
+
+| `Get-Command *service*` | Trouver toutes les commandes liées aux services |
+
+| `Get-Service` | Voir les services installés sur la machine |
+
+| `Get-Process` | Affiche tous les processus en cours |
+
+| `Start-Service -Name <nom>` | Démarre un service Windows |
+| `Stop-Process -Name chrome` | Arrête un processus |
+
+| `Start-Process <programme>` | Lance une application (ex: Chrome) |
+
+| `Set-ExecutionPolicy` | Modifier les règles d’exécution des scripts |
+
+| `ConvertTo-HTML` | Convertit une sortie PowerShell en rapport HTML |
+
+| `Get-ExecutionPolicy` | Affiche la politique d’exécution active |
+
+### 🧪 **Créer son premier script PowerShell (Exercice)**
+
+### 1️⃣ Préparation de l’environnement
+
+1. **Lancer PowerShell en administrateur**
+2. Se déplacer dans les Documents :
+
+cd \
+cd .\Users\VotreNomDUtilisateur\Documents\
+
+Créer un dossier `Scripts` :
+mkdir "Scripts"
+cd .\Scripts\
+
+Créer un fichier :
+
+New-Item -Name "script.ps1"
+
+💡 *Astuce* : Utilise la **tabulation** pour l’autocomplétion.
+
+### 2️⃣ Écriture du script dans PowerShell ISE
+
+Ouvre PowerShell ISE en administrateur. Si absent, utilise VS Code ou Notepad.
+
+Contenu du script :
+
+$input = Read-Host -Prompt "Voulez vous ouvrir google.com ? (Y/N)"
+if(($input -eq "y")){
+echo "vous avez ouvert la page le "
+Get-Date
+[system.Diagnostics.Process]::Start("https://www.google.com")
+} else {
+echo "une prochaine fois !"
+}
+
+### 3️⃣ Test du script
+
+Dans PowerShell :
+
+cd .\Documents\Scripts\
+Start-Transcript
+.\script.ps1
+Stop-Transcript
+
+- Tape `Y` → Le site s’ouvre + date affichée
+- Tape `N` → Message : *une prochaine fois !*
+
+Le fichier de **transcription** est généré automatiquement dans le dossier Documents.
+
+### ✅ **Conclusion**
+
+PowerShell permet d’automatiser des actions système. Créer des scripts simples permet de :
+
+- Gagner du temps
+- Exécuter des tâches répétitives
+- Apprendre la logique des conditions et variables
+
+Ce premier exercice pose les **bases du scripting** PowerShell pour administrer un système.
+
+### 📂 **Gestion des fichiers et dossiers**
+
+### 📌 Commandes essentielles
+
+| Action | Commande |
+| --- | --- |
+| **Créer un dossier** | `mkdir "C:\chemin\vers\dossier"` |
+| **Afficher le contenu d’un dossier** | `Get-ChildItem "C:\chemin\vers\dossier"` |
+| **Supprimer un dossier** | `Remove-Item "C:\chemin\vers\dossier" -Recurse -Force` |
+| **Créer un fichier** | `New-Item -Path "C:\chemin\vers\dossier\test.txt" -ItemType File` |
+| **Écrire dans un fichier** | `Add-Content "C:\chemin\vers\dossier\test.txt" 'Hello World'` |
+| **Lire le contenu d’un fichier** | `Get-Content "C:\chemin\vers\dossier\test.txt"` |
+| **Déplacer un fichier** | `Move-Item "C:\source\test.txt" "C:\destination\"` |
+| **Supprimer un fichier** | `Remove-Item "C:\chemin\vers\dossier\test.txt"` |
+
+### 🔁 Exemple de mini-exercice
+
+- Créer un dossier `monDossier` sur le bureau :
+    
+    `mkdir "$env:USERPROFILE\Desktop\monDossier"`
+    
+- Créer un fichier `exercice.txt` dans ce dossier :
+    
+    `New-Item "$env:USERPROFILE\Desktop\monDossier\exercice.txt"`
+    
+- Écrire dans le fichier :
+    
+    `Add-Content "$env:USERPROFILE\Desktop\monDossier\exercice.txt" "Ceci est mon premier texte avec PowerShell"`
+    
+- Lire le fichier :
+    
+    `Get-Content "$env:USERPROFILE\Desktop\monDossier\exercice.txt"`
+    
+- Supprimer le fichier :
+    
+    `Remove-Item "$env:USERPROFILE\Desktop\monDossier\exercice.txt"`
+    
+- Supprimer le dossier :
+    
+    `Remove-Item "$env:USERPROFILE\Desktop\monDossier" -Recurse -Force`
+    
+POWERSHELL ET A
+
+
+## ✅ Préparation
+
+- **Exécuter PowerShell en tant qu’administrateur**
+- **Charger le module AD** :
+
+Import-Module ActiveDirectory
+
+## 👤 Créer un utilisateur AD
+
+### 🔹 Création simple
+
+New-ADUser J.Dupont
+
+⚠️ Par défaut :
+
+- Compte **désactivé**
+- **Pas de mot de passe**
+- Membre de **"Utilisateurs du domaine"**
+- L’utilisateur devra **changer son mot de passe** à la première connexion
+
+🔹 Activer le compte
+
+Enable-ADAccount -Identity "J.Dupont"
+
+🔹 Création complète avec mot de passe
+
+New-ADUser -Name "Marc Smith" -GivenName "Marc" -Surname "Smith" `-SamAccountName "Marc.Smith" -UserPrincipalName "Marc.Smith@domaine.local"`
+-Path "OU=Utilisateurs,DC=domaine,DC=local" `
+-AccountPassword (Read-Host -AsSecureString "Mot de passe") -Enabled $true
+
+🔹 Vérifier l’utilisateur
+
+Get-ADUser -Filter * -Properties samAccountName | Select samAccountName
+Get-ADUser Marc.Smith -Properties * | Select Name, Enabled, UserPrincipalName
+
+### 📜 Script interactif (dans ISE ou VSCode uniquement)
+
+💡 Ce script doit être exécuté dans un environnement de script comme **PowerShell ISE** ou **Visual Studio Code** (pas directement dans la console).
+
+```powershell
+powershell
+
+$prenom = Read-Host "Prénom"
+$nom = Read-Host "Nom"
+$ou = Read-Host "Nom de l’OU"
+
+$login = "$prenom.$nom"
+$path = "OU=$ou,DC=domaine,DC=local"
+
+if (Test-Path "AD:$path") {
+    New-ADUser -Name "$prenom $nom" -GivenName $prenom -Surname $nom `
+    -SamAccountName $login -UserPrincipalName "$login@domaine.local" `
+    -Path $path -AccountPassword (Read-Host -AsSecureString "Mot de passe") -Enabled $true
+} else {
+    Write-Error "L’OU spécifiée n’existe pas"
+}
+
+```
+
+### ✅ **Exemple complet : création d’un utilisateur dans l’AD (cas de la mairie)**
+
+```powershell
+powershell
+
+Import-Module ActiveDirectory
+
+# Demande des informations à l'utilisateur
+$prenom = Read-Host "Prénom"
+$nom = Read-Host "Nom"
+$login = "$prenom.$nom"
+$displayName = "$prenom.$nom"
+$email = "$login@garches.fr"
+
+# OU fixes
+$ouVille = "Garches"
+$ouCategorie = "users"
+$ouType = "Agents"
+
+# Choix de la structure (MAIRIE ou MAIRIE EXT)
+$choix = Read-Host "MAIRIE (1 = MAIRIE, 2 = MAIRIE EXT)"
+if ($choix -eq "1") {
+    $ouMairie = "MAIRIE"
+} elseif ($choix -eq "2") {
+    $ouMairie = "MAIRIE EXT"
+} else {
+    Write-Error "Choix invalide"
+    exit
+}
+
+# Saisie du service
+$ouService = Read-Host "Service"
+
+# Construction du chemin complet
+$path = "OU=$ouService,OU=$ouMairie,OU=$ouType,OU=$ouCategorie,OU=$ouVille,DC=tondomaine,DC=lan"
+
+Write-Host "Chemin testé : $path"
+
+# Vérifie que l'OU existe vraiment
+try {
+    $exists = Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$path'"
+    if ($exists) {
+        $password = Read-Host -AsSecureString "Mot de passe"
+        New-ADUser -Name $displayName `
+        -GivenName $prenom `
+        -Surname $nom `
+        -DisplayName $displayName `
+        -SamAccountName $login `
+        -UserPrincipalName "$login@mairiedegarches.lan" `
+        -EmailAddress $email `
+        -Path $path `
+        -AccountPassword $password `
+        -Enabled $true
+        Write-Host "Utilisateur '$prenom $nom' créé dans : $path"
+    } else {
+        Write-Error "`Le chemin OU est introuvable. Vérifiez l'orthographe ou l'existence dans l'AD."
+    }
+} catch {
+    Write-Error "`nErreur lors de la recherche de l'OU : $_"
+}
+
+```
+
+### 🧠 **Vérifier l’existence d’un OU dans Active Directory**
+
+### ❌ Pourquoi `(Test-Path "AD:$path")` ne fonctionne pas :
+
+- `Test-Path` **ne fonctionne pas toujours correctement** avec le provider `AD:` pour vérifier un chemin OU.
+- Il peut **renvoyer `$false` même si le chemin est valide**, surtout si l’OU est profond ou contient des caractères spéciaux (espaces, majuscules...).
+- Ce comportement est **peu fiable** pour vérifier un chemin d’OU avant une création d’utilisateur.
+
+### ✅ Solution fiable : `Get-ADOrganizationalUnit`
+
+```powershell
+powershell
+
+try {
+    $exists = Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$path'"
+    if ($exists) {
+        # L'OU existe, on peut continuer
+    } else {
+        Write-Error "OU introuvable"
+    }
+} catch {
+    Write-Error "Erreur lors de la recherche de l'OU"
+}
+
+```
+
+### 🔐 Pourquoi c'est mieux :
+
+- Utilise directement les **cmdlets Active Directory** prévues à cet effet.
+- Permet une **gestion des erreurs** avec `try/catch`.
+- Plus fiable pour des scripts de production.
+
+### ⚠️ Autoriser l'exécution des scripts (une seule fois)
+
+Par défaut, Windows bloque les scripts PowerShell. Il faut autoriser leur exécution (en **admin**) :
+
+```powershell
+powershell
+
+Set-ExecutionPolicy RemoteSigned
+
+```
+
+Puis valider avec `O` (ou `Y` selon la langue).
+
+---
+
+### ▶️ Exécuter un script PowerShell
+
+1. Ouvre **PowerShell**
+2. Va dans le dossier du script :
+
+```powershell
+powershell
+
+cd C:\Scripts
+
+```
+
+1. Exécute le script :
+
+```powershell
+powershell
+
+.\mon_script.ps1
+
+```
+
+## 👥 Gestion des groupes
+
+### 🔹 Lister toutes les cmdlets liées aux groupes
+
+```powershell
+powershell
+Get-Command -Module ActiveDirectory -Name "*Group*"
+
+```
+
+### 🔹 Créer un groupe
+
+```powershell
+powershell
+
+New-ADGroup "Compta" -Path "OU=Groupes,DC=domaine,DC=local" `
+-GroupCategory Security -GroupScope Global -PassThru -Verbose
+
+```
+
+### 🔹 Ajouter un utilisateur à un groupe
+
+```powershell
+powershell
+Add-ADGroupMember -Identity "Compta" -Members "J.Dupont"
+
+```
+
+### 🔹 Supprimer un utilisateur d’un groupe
+
+```powershell
+powershell
+
+Remove-ADGroupMember -Identity "Compta" -Members "J.Dupont"
+
+```
+
+---
+
+## ❗ Gestion des erreurs
+
+### 🔹 Avec `ErrorAction` / `ErrorVariable`
+
+```powershell
+powershell
+
+Get-ADUser "UtilisateurInconnu" -ErrorAction Stop -ErrorVariable erreurAD
+Write-Output $erreurAD
+
+```
+
+### 🔹 Try / Catch / Finally
+
+```powershell
+powershell
+
+Try {
+    $user = Get-ADUser "J.Dupont"
+    Write-Host "Utilisateur trouvé : $($user.Name)"
+}
+Catch {
+    Write-Error "Erreur lors de la récupération de l’utilisateur"
+}
+Finally {
+    Write-Host "Fin de la recherche"
+}
+
+```
+
+---
+
+## 🧪 Récapitulatif des cmdlets à connaître
+
+| Action | Cmdlet |
+| --- | --- |
+| Charger le module AD | `Import-Module ActiveDirectory` |
+| Créer un utilisateur | `New-ADUser` |
+| Activer un compte | `Enable-ADAccount` |
+| Chercher un utilisateur | `Get-ADUser` |
+| Créer un groupe | `New-ADGroup` |
+| Ajouter membre à un groupe | `Add-ADGroupMember` |
+| Supprimer membre d’un groupe | `Remove-ADGroupMember` |
+| Gérer erreurs | `Try`, `Catch`, `-ErrorAction`, `-ErrorVariable` |
