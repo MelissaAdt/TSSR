@@ -1,0 +1,259 @@
+# PORT-SECURITY CISCO — PROCÉDURE EXAMEN
+
+## ÉTAPE 1 — VÉRIFIER LES PORTS
+
+```bash
+show interfaces status
+```
+
+ou
+
+```bash
+show ip interface brief
+```
+
+---
+
+# ÉTAPE 2 — SÉCURISER UN PORT
+
+Exemple : Fa0/5
+
+```bash
+enable
+
+configure terminal
+
+interface fa0/5
+
+switchport mode access
+
+switchport port-security
+```
+
+---
+
+# ÉTAPE 3 — LIMITER LE NOMBRE DE MAC
+
+1 seule machine autorisée :
+
+```bash
+switchport port-security maximum 1
+```
+
+Plusieurs machines :
+
+```bash
+switchport port-security maximum 10
+```
+
+---
+
+# ÉTAPE 4 — CONFIGURER STICKY
+
+Méthode recommandée à l'examen
+
+```bash
+switchport port-security mac-address sticky
+```
+
+La MAC est apprise automatiquement.
+
+---
+
+# ÉTAPE 5 — SAUVEGARDER
+
+```bash
+end
+
+copy running-config startup-config
+```
+
+Sans sauvegarde :
+
+```text
+Les MAC Sticky seront perdues
+```
+
+---
+
+# CONFIGURATION COMPLÈTE STICKY
+
+```bash
+enable
+
+configure terminal
+
+interface fa0/5
+
+switchport mode access
+
+switchport port-security
+
+switchport port-security maximum 1
+
+switchport port-security mac-address sticky
+
+end
+
+copy running-config startup-config
+```
+
+---
+
+# CONFIGURATION MAC STATIQUE
+
+## Trouver la MAC
+
+```bash
+show mac address-table
+```
+
+## Ajouter la MAC
+
+```bash
+interface fa0/5
+
+switchport mode access
+
+switchport port-security
+
+switchport port-security mac-address 0001.0001.0001
+```
+
+---
+
+# CONFIGURER PLUSIEURS PORTS
+
+Exemple :
+
+```bash
+interface range fa0/1-18
+
+switchport mode access
+
+switchport port-security
+
+switchport port-security maximum 1
+
+switchport port-security mac-address sticky
+```
+
+---
+
+# DÉSACTIVER LES PORTS INUTILISÉS
+
+Exemple :
+
+```bash
+interface range fa0/10-24
+
+shutdown
+```
+
+Réactiver :
+
+```bash
+interface range fa0/10-24
+
+no shutdown
+```
+
+---
+
+# VÉRIFICATION
+
+## État général
+
+```bash
+show port-security
+```
+
+## Interface précise
+
+```bash
+show port-security interface fa0/5
+```
+
+## MAC apprises
+
+```bash
+show mac address-table
+```
+
+## Configuration
+
+```bash
+show running-config
+```
+
+---
+
+# DÉPANNAGE
+
+Vérifier :
+
+```text
+1. Port en mode access
+
+2. Port-security activé
+
+3. Maximum correct
+
+4. Sticky activé
+
+5. Running-config sauvegardée
+
+6. Port pas en shutdown
+```
+
+---
+
+# PROCÉDURE RAPIDE TSSR
+
+```bash
+enable
+
+conf t
+
+interface fa0/5
+
+switchport mode access
+
+switchport port-security
+
+switchport port-security maximum 1
+
+switchport port-security mac-address sticky
+
+end
+
+copy running-config startup-config
+```
+
+---
+
+# CE QU'IL FAUT RETENIR POUR LA PRATIQUE
+
+```text
+Sticky = méthode la plus utilisée
+
+Maximum 1 = un PC par port
+
+show port-security = vérification
+
+shutdown = désactiver ports inutilisés
+
+copy running-config startup-config = obligatoire
+```
+
+Pour la pratique de 1h30, si un exercice demande de "sécuriser un switch", les 3 manipulations les plus probables sont :
+
+switchport mode access
+
+switchport port-security
+
+switchport port-security mac-address sticky
+
+et ensuite :
+
+show port-security
