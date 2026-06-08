@@ -1,0 +1,153 @@
+
+
+**Étape 2** : Vérifier où tu es avec `pwd`
+
+```bash
+pwd
+
+```
+
+
+
+### 5️⃣ Copier un fichier
+
+**Étape 10** : Copier le fichier Stockage vers un autre dossier avec `cp`
+
+```bash
+cp Stockage /home/srv-openssh/Notes-de-service/
+
+```
+
+**Étape 11** : Vérifier que le fichier a bien été copié dans le bon dossier.
+
+---
+
+### 6️⃣ Renommer et déplacer un fichier
+
+**Étape 12** : Renommer et déplacer avec `mv`
+
+```bash
+mv Stockage Stockage2.0 /home/srv-openssh/Autres/
+
+```
+
+**Étape 13** : Si ça n’a pas renommé, aller dans le dossier de destination et renommer :
+
+Par exemple : si le fichier est nommé **Stockage** et que nous voulons changer le nom, nous allons taper la commande **mv Stockage** (puis le nom que l'on souhaite donner)
+
+```bash
+mv Stockage toto
+
+```
+
+---
+
+### 7️⃣ Commandes utiles supplémentaires
+
+- `&&` → exécute la 2e commande seulement si la 1ère réussit
+- `;` → enchaîne les commandes
+- `|` → pipeline (sortie vers entrée)
+- `||` → exécute la 2e commande seulement si la 1ère échoue
+- `&` → exécute en arrière-plan
+
+---
+
+### 8️⃣ Gestion du système
+
+**Étape 14** : AJOUTER USER à sudo
+
+```bash
+/usr/sbin/usermod -aG sudo melissa
+
+```
+
+**Étape 14** : Mettre à jour Debian 11
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+
+```
+
+**Étape 15** : Installer un paquet
+
+```bash
+sudo apt install nom_paquet -y
+
+```
+
+**Étape 16** : Infos système
+
+```bash
+hostname -i   # adresse IP
+uname -a      # noyau
+free -h       # RAM
+lscpu         # CPU
+lshw          # hardware
+
+```
+
+---
+
+### 9️⃣ Gestion des utilisateurs et permissions
+
+**Étape 17** : Passer root
+
+```bash
+su        # se connecter en root
+sudo ...  # exécuter une commande en admin
+
+```
+
+**Étape 18** : Modifier un mot de passe
+
+```bash
+sudo passwd utilisateur
+sudo passwd root
+
+```
+
+**Étape 19** : Changer le propriétaire
+
+```bash
+chown nouvel_user fichier.txt
+
+```
+
+**Étape 20** : Modifier les droits avec `chmod`
+
+```bash
+chmod 755 fichier.txt
+
+```
+
+Ça veut dire :
+
+- **7 = rwx** → user (tout)
+- **5 = r-x** → group (lecture + exécution)
+- **5 = r-x** → others (lecture + exécution)
+
+👉 Résultat :
+
+- toi → tout faire
+- les autres → lire + exécuter
+
+```bash
+chmod a+(r, w ou x) fichier.txt
+
+```
+
+- **a = all (tout le monde)**
+- **+ = ajouter**
+- **x = exécution**
+
+👉 Résultat :
+
+→ tout le monde peut exécuter le fichier
+
+```bash
+chmod a-(r, w ou x) fichier.txt
+
+```
+
+
