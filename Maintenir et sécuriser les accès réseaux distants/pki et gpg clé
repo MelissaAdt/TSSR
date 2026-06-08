@@ -1,0 +1,228 @@
+# PKI / GPG — PROCÉDURE EXAMEN
+
+## ÉTAPE 1 — INSTALLER GPG
+
+```bash id="cml17e"
+apt update
+apt install gpg -y
+```
+
+Vérifier :
+
+```bash id="xv24by"
+gpg --version
+```
+
+---
+
+# ÉTAPE 2 — CRÉER UNE PAIRE DE CLÉS
+
+```bash id="0u4r7t"
+gpg --full-generate-key
+```
+
+Choix :
+
+```text id="65k1i6"
+Type : RSA and RSA
+
+Taille : 3072
+
+Expiration : 0
+
+Nom : melissa
+
+Email : melissa@test.local
+
+Passphrase : votre mot de passe
+```
+
+---
+
+# ÉTAPE 3 — VÉRIFIER LA CLÉ
+
+```bash id="h0i6nn"
+gpg --list-keys
+```
+
+Exemple :
+
+```text id="9cmzyb"
+pub rsa3072
+
+uid melissa
+```
+
+⚠️ Retenir exactement le nom affiché.
+
+---
+
+# ÉTAPE 4 — LOCALISER LES CLÉS
+
+```bash id="p4l2n5"
+ls -al ~
+```
+
+```text id="9r6v1w"
+.gnupg
+```
+
+---
+
+# ÉTAPE 5 — EXPORTER LA CLÉ PUBLIQUE
+
+```bash id="n64eph"
+gpg --armor --output pubkey.txt --export melissa
+```
+
+Vérification :
+
+```bash id="d6pt9i"
+cat pubkey.txt
+```
+
+---
+
+# ÉTAPE 6 — IMPORTER UNE CLÉ PUBLIQUE
+
+```bash id="d4tv4v"
+gpg --import pubkey.txt
+```
+
+Vérification :
+
+```bash id="8o67vv"
+gpg --list-keys
+```
+
+---
+
+# ÉTAPE 7 — CRÉER UN FICHIER
+
+```bash id="zv6jzn"
+echo "Bonjour" > Bonjour
+```
+
+Vérification :
+
+```bash id="s3t9gq"
+cat Bonjour
+```
+
+---
+
+# ÉTAPE 8 — CHIFFRER LE FICHIER
+
+```bash id="2ax3e3"
+gpg --encrypt --recipient melissa Bonjour
+```
+
+Résultat :
+
+```text id="49j03x"
+Bonjour.gpg
+```
+
+---
+
+# ÉTAPE 9 — DÉCHIFFRER
+
+```bash id="4nhg59"
+gpg --output Bonjour.txt --decrypt Bonjour.gpg
+```
+
+Vérification :
+
+```bash id="8b9np8"
+cat Bonjour.txt
+```
+
+Résultat attendu :
+
+```text id="h4w0v6"
+Bonjour
+```
+
+---
+
+# DÉPANNAGE
+
+## Voir les clés
+
+```bash id="4jk2gp"
+gpg --list-keys
+```
+
+## Voir les clés secrètes
+
+```bash id="tt73u6"
+gpg --list-secret-keys
+```
+
+## Vérifier le dossier
+
+```bash id="ezc25g"
+ls -al ~/.gnupg
+```
+
+## Erreur recipient
+
+Vérifier :
+
+```bash id="vk08m6"
+gpg --list-keys
+```
+
+et reprendre exactement le nom affiché.
+
+---
+
+# CE QU'IL FAUT RETENIR
+
+```text id="v84c1z"
+1. Générer la paire de clés
+
+2. Exporter la clé publique
+
+3. Importer la clé publique
+
+4. Chiffrer
+
+5. Déchiffrer
+```
+
+---
+
+# COMMANDES À CONNAÎTRE PAR CŒUR
+
+```bash id="71ep4n"
+gpg --full-generate-key
+
+gpg --list-keys
+
+gpg --armor --output pubkey.txt --export melissa
+
+gpg --import pubkey.txt
+
+gpg --encrypt --recipient melissa fichier
+
+gpg --output fichier.txt --decrypt fichier.gpg
+```
+
+---
+
+# SI ÇA TOMBE À L'ORAL
+
+```text id="cvr4oj"
+PKI = Infrastructure à Clé Publique
+
+Clé publique = partager
+
+Clé privée = garder secrète
+
+Chiffrer = clé publique
+
+Déchiffrer = clé privée
+
+HTTPS, VPN, SSH utilisent ce principe.
+```
