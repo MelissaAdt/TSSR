@@ -1,0 +1,195 @@
+# ACL CISCO / PACKET TRACER
+
+## Configuration interface routeur
+
+```bash
+enable
+configure terminal
+
+interface gigabitEthernet 0/0
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+
+end
+copy running-config startup-config
+```
+
+---
+
+# VÉRIFICATION
+
+```bash
+show ip interface brief
+show running-config
+show access-lists
+```
+
+---
+
+# ACL STANDARD
+
+## Autoriser uniquement 192.168.1.10
+
+```bash
+access-list 1 permit 192.168.1.10
+access-list 1 deny any
+```
+
+Application :
+
+```bash
+interface gigabitEthernet 0/0
+ip access-group 1 in
+```
+
+---
+
+# ACL ÉTENDUE
+
+## Autoriser HTTP et HTTPS
+
+```bash
+access-list 100 permit tcp any host 192.168.1.10 eq 80
+access-list 100 permit tcp any host 192.168.1.10 eq 443
+```
+
+## Bloquer SSH
+
+```bash
+access-list 100 deny tcp any host 192.168.1.10 eq 22
+```
+
+## Bloquer tout le reste
+
+```bash
+access-list 100 deny ip any any
+```
+
+Application :
+
+```bash
+interface gigabitEthernet 0/0
+ip access-group 100 in
+```
+
+---
+
+# ACL ICMP (PING)
+
+## Bloquer le ping
+
+```bash
+access-list 100 deny icmp any any
+```
+
+## Autoriser le ping
+
+```bash
+access-list 100 permit icmp any any
+```
+
+---
+
+# SUPPRIMER UNE ACL
+
+## Supprimer une ACL complète
+
+```bash
+no access-list 100
+```
+
+## Retirer une ACL d'une interface
+
+```bash
+interface gigabitEthernet 0/0
+no ip access-group 100 in
+```
+
+---
+
+# LOGS
+
+```bash
+logging console
+```
+
+---
+
+# TESTS
+
+## Ping
+
+```bash
+ping 192.168.1.10
+```
+
+## HTTP
+
+```bash
+telnet 192.168.1.10 80
+```
+
+## HTTPS
+
+```bash
+telnet 192.168.1.10 443
+```
+
+## SSH
+
+```bash
+telnet 192.168.1.10 22
+```
+
+---
+
+# DÉPANNAGE ACL
+
+```bash
+show access-lists
+
+show running-config
+
+show ip interface brief
+```
+
+Vérifier :
+
+* ACL appliquée sur la bonne interface
+* ACL appliquée dans le bon sens (in / out)
+* Ordre des règles
+* Présence du `deny ip any any`
+
+---
+
+# PORTS À CONNAÎTRE
+
+```text
+HTTP   = 80
+HTTPS  = 443
+FTP    = 21
+SSH    = 22
+TELNET = 23
+DNS    = 53
+SMTP   = 25
+POP3   = 110
+IMAP   = 143
+RDP    = 3389
+DHCP   = 67/68
+```
+
+---
+
+# À CONNAÎTRE PAR CŒUR
+
+```bash
+access-list 100 permit tcp any any eq 80
+access-list 100 permit tcp any any eq 443
+access-list 100 deny tcp any any eq 22
+access-list 100 deny ip any any
+
+interface g0/0
+ip access-group 100 in
+
+show access-lists
+```
