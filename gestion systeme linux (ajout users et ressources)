@@ -1,0 +1,216 @@
+## 👤 Gestion des utilisateurs
+
+### 🏗️ Créer un utilisateur
+
+**Étape 1 :**
+
+➡️ Ouvrir un **terminal** sur votre système Debian 11.
+
+**Étape 2 :**
+
+➡️ Se connecter en **superutilisateur (root)** ou utiliser `sudo` :
+
+```bash
+sudo su
+
+```
+
+**Étape 3 :**
+
+➡️ Créer un nouvel utilisateur avec `useradd` :
+
+```bash
+/usr/sbin/useradd john
+
+```
+
+🔹 Cette commande crée un utilisateur nommé **john** avec un **UID unique**.
+
+**Étape 4 :**
+
+➡️ Définir un répertoire personnel personnalisé :
+
+```bash
+useradd -d /home/john john
+
+```
+
+💡 Pour connaître toutes les options possibles :
+
+```bash
+man useradd
+
+```
+
+**Étape 5 :**
+
+➡️ Définir le **mot de passe** de l’utilisateur :
+
+```bash
+passwd john
+
+```
+
+👉 Saisissez et confirmez le mot de passe quand le système le demande.
+
+Un groupe du même nom que l’utilisateur est créé automatiquement.
+
+➡️ Créer un nouvel utilisateur avec `adduser` :
+
+```bash
+/usr/sbin/adduser kuro
+
+```
+
+---
+
+### 🔍 Afficher les utilisateurs existants
+
+**Étape 6 :**
+
+➡️ Pour voir la liste des utilisateurs créés, tapez :
+
+```bash
+cat /etc/passwd | awk -F : '{print $1}'
+
+```
+
+💡 Cette commande affiche tous les utilisateurs du système (y compris les comptes système).
+
+**Étape 7 :**
+
+➡️ En graphique :
+
+- Ouvrir le **Menu** et taper « Utilisateurs et Groupes ».
+- Cliquer sur **Utilisateurs et Groupes** → l’utilisateur créé apparaît.
+
+**Étape 8 :**
+
+➡️ Consulter les informations de l’utilisateur administrateur :
+
+Depuis le même menu, sélectionnez l’utilisateur **Administrateur** pour voir les détails (groupes, droits, etc.).
+
+---
+
+### 🗑️ Supprimer un utilisateur
+
+**Étape 9 :**
+
+➡️ Ouvrir un terminal sur Debian 11.
+
+**Étape 10 :**
+
+➡️ Passer en mode superutilisateur :
+
+```bash
+sudo su
+
+```
+
+**Étape 11 :**
+
+➡️ Supprimer un utilisateur :
+
+```bash
+deluser john
+
+```
+
+**Étape 12 :**
+
+➡️ Supprimer aussi son **répertoire personnel** :
+
+```bash
+deluser --remove-home john
+
+```
+
+🔹 Cette commande efface l’utilisateur **john** et son dossier `/home/john`.
+
+---
+
+## 💽 Gestion des partitions existantes
+
+### 🧾 Afficher les partitions en ligne de commande
+
+**Étape 13 :**
+
+➡️ Tapez :
+
+```bash
+sudo fdisk -l
+
+```
+
+💡 Cela affiche la liste complète des **disques** et **partitions** présents sur le système.
+
+---
+
+### 💿 Afficher les partitions en graphique
+
+**Étape 14 :**
+
+➡️ Ouvrir le **Menu** et taper « Disques ».
+
+**Étape 15 :**
+
+➡️ Cliquer sur **Disques** → les partitions apparaissent sous forme graphique (nom, taille, type, points de montage…).
+
+---
+
+## 🔄 Mise à jour du système Debian
+
+### 🔧 Mettre à jour via le terminal
+
+**Étape 16 :**
+
+➡️ Mettre à jour la **liste des paquets** disponibles :
+
+```bash
+sudo apt-get update
+
+```
+
+💬 Cette commande consulte les dépôts pour connaître les nouvelles versions des paquets.
+
+**Étape 17 :**
+
+➡️ Mettre à jour les **paquets installés** :
+
+```bash
+sudo apt-get upgrade
+
+```
+
+💡 Combinez avec `sudo apt-get dist-upgrade` pour une mise à jour plus complète incluant les dépendances.
+
+---
+
+## ✨ L’essentiel à retenir
+
+✅ **Création d’utilisateur :**
+
+`useradd` → crée un compte
+
+`passwd` → définit le mot de passe
+
+`deluser` → supprime un utilisateur
+
+✅ **Affichage des utilisateurs :**
+
+`cat /etc/passwd | awk -F : '{print $1}'` → liste les comptes
+
+Permet de distinguer les utilisateurs réels des comptes système.
+
+✅ **Gestion des disques :**
+
+`sudo fdisk -l` → liste toutes les partitions existantes
+
+Utile pour vérifier la structure du disque et les points de montage.
+
+✅ **Mise à jour du système :**
+
+`sudo apt-get update` → met à jour la liste des paquets
+
+`sudo apt-get upgrade` → installe les dernières versions
+
