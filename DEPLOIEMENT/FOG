@@ -1,0 +1,411 @@
+# FOG - DÉPLOIEMENT D'IMAGES (FICHE PRATIQUE TSSR)
+
+⚠️ Pour l'examen, retiens surtout :
+
+* Installation FOG
+* DHCP 066 / 067
+* Capture d'une image
+* Déploiement d'une image
+* PXE Boot
+
+---
+
+# 1. PRÉPARER LE SERVEUR FOG
+
+## Debian
+
+IP fixe obligatoire
+
+Exemple :
+
+```bash
+192.168.1.10
+```
+
+Vérifier :
+
+```bash
+ip a
+```
+
+Mettre à jour :
+
+```bash
+apt update
+
+apt upgrade -y
+```
+
+---
+
+# 2. INSTALLER FOG
+
+Télécharger :
+
+```bash
+wget https://github.com/FOGProject/fogproject/archive/1.5.9.tar.gz
+```
+
+Décompresser :
+
+```bash
+tar -xvzf 1.5.9.tar.gz
+```
+
+Entrer dans le dossier :
+
+```bash
+cd fogproject-1.5.9/bin
+```
+
+Lancer l'installation :
+
+```bash
+./installfog.sh
+```
+
+---
+
+# 3. PARAMÈTRES INSTALLATION FOG
+
+Pendant l'assistant :
+
+```text
+Type : 2
+
+DHCP : N
+
+DNS : Y
+
+Routeur : Y
+
+Valider : Y
+```
+
+À la fin noter :
+
+```text
+IP du serveur FOG
+```
+
+---
+
+# 4. FINALISER L'INSTALLATION
+
+Depuis un navigateur :
+
+```text
+http://IP_FOG/fog/management
+```
+
+Exemple :
+
+```text
+http://192.168.1.10/fog/management
+```
+
+Cliquer :
+
+```text
+Install / Update Now
+```
+
+Puis :
+
+```text
+Here
+```
+
+Retour terminal :
+
+```text
+Entrée
+```
+
+---
+
+# 5. CONFIGURER LE DHCP
+
+Sur Windows Server :
+
+```text
+DHCP
+
+Étendue
+
+Options d'étendue
+```
+
+Configurer :
+
+```text
+066 = IP serveur FOG
+
+067 = undionly.kpxe
+```
+
+Exemple :
+
+```text
+066 = 192.168.1.10
+
+067 = undionly.kpxe
+```
+
+Redémarrer DHCP :
+
+```text
+Action
+
+Redémarrer
+```
+
+---
+
+# 6. CRÉER LE MASTER
+
+Créer une VM Windows propre :
+
+```text
+Windows installé
+
+Logiciels installés
+
+Mises à jour faites
+```
+
+⚠️ Tout ce qui est dans cette VM sera cloné.
+
+---
+
+# 7. ENREGISTRER LA MACHINE
+
+Démarrer la VM
+
+Boot PXE
+
+Choisir :
+
+```text
+Quick Registration and Inventory
+```
+
+La machine apparaît dans FOG.
+
+---
+
+# 8. CRÉER UNE IMAGE
+
+Interface FOG :
+
+```text
+Images
+
+Create New Image
+```
+
+Exemple :
+
+```text
+Win10_Master
+```
+
+Valider :
+
+```text
+Add
+```
+
+---
+
+# 9. CAPTURER L'IMAGE
+
+Interface FOG :
+
+```text
+Hosts
+
+List All Hosts
+
+Sélectionner le PC
+```
+
+Puis :
+
+```text
+Basic Tasks
+
+Capture
+```
+
+Redémarrer le poste.
+
+FOG lance :
+
+```text
+Partclone
+```
+
+---
+
+# 10. VÉRIFIER LA CAPTURE
+
+Dans FOG :
+
+```text
+Images
+
+List All Images
+```
+
+Vérifier que :
+
+```text
+Win10_Master
+```
+
+est présente.
+
+---
+
+# 11. DÉPLOYER UNE IMAGE
+
+Créer une VM vide.
+
+Boot PXE.
+
+Enregistrer la machine.
+
+Dans FOG :
+
+```text
+Hosts
+
+List All Hosts
+
+Sélectionner la machine
+
+Deploy
+```
+
+Choisir :
+
+```text
+Win10_Master
+```
+
+---
+
+# 12. LANCER LE DÉPLOIEMENT
+
+Redémarrer la VM.
+
+FOG lance automatiquement :
+
+```text
+Partclone
+```
+
+Attendre la fin.
+
+---
+
+# 13. DÉMARRER LE POSTE
+
+Modifier l'ordre de boot :
+
+```text
+Disque dur en premier
+```
+
+Redémarrer.
+
+Le poste démarre avec l'image déployée.
+
+---
+
+# DÉPANNAGE
+
+## Vérifier IP
+
+```bash
+ip a
+```
+
+## Vérifier accès web FOG
+
+```text
+http://IP_FOG/fog/management
+```
+
+## Vérifier DHCP
+
+```text
+Option 066
+
+Option 067
+```
+
+## Vérifier PXE
+
+```text
+Boot réseau activé
+```
+
+## Vérifier image
+
+```text
+Images
+
+List All Images
+```
+
+---
+
+# CHECKLIST EXAMEN
+
+```text
+□ IP fixe sur FOG
+
+□ apt update
+
+□ Installation FOG
+
+□ Accès interface web
+
+□ DHCP 066 configuré
+
+□ DHCP 067 configuré
+
+□ PXE activé
+
+□ Machine enregistrée
+
+□ Image créée
+
+□ Capture réalisée
+
+□ Déploiement réalisé
+
+□ Boot disque OK
+```
+
+---
+
+# À RETENIR
+
+```text
+Master = image modèle
+
+Capture = création de l'image
+
+Deploy = déploiement de l'image
+
+PXE = démarrage réseau
+
+066 = IP serveur FOG
+
+067 = undionly.kpxe
+
+Partclone = moteur de capture/déploiement
+```
