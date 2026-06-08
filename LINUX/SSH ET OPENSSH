@@ -1,0 +1,218 @@
+# SSH / OPENSSH
+
+## Installation serveur SSH
+
+```bash
+apt update
+apt install openssh-server -y
+```
+
+## Vérifier le service
+
+```bash
+systemctl status ssh
+systemctl restart ssh
+```
+
+---
+
+# CONNEXION SSH
+
+## Connexion
+
+```bash
+ssh user@IP_SERVEUR
+```
+
+Exemple :
+
+```bash
+ssh melissa@192.168.1.10
+```
+
+## Quitter
+
+```bash
+exit
+```
+
+---
+
+# CONFIGURATION SSH
+
+## Fichier principal
+
+```bash
+nano /etc/ssh/sshd_config
+```
+
+## Changer le port
+
+```bash
+Port 2222
+```
+
+## Désactiver l'authentification par mot de passe
+
+```bash
+PasswordAuthentication no
+```
+
+## Appliquer
+
+```bash
+systemctl restart ssh
+```
+
+---
+
+# CLÉS SSH
+
+## Générer une paire de clés
+
+```bash
+ssh-keygen
+```
+
+## Copier la clé publique
+
+```bash
+ssh-copy-id user@IP_SERVEUR
+```
+
+## Connexion avec clé
+
+```bash
+ssh user@IP_SERVEUR
+```
+
+---
+
+# SCP (COPIE DE FICHIERS)
+
+## Client → Serveur
+
+```bash
+scp fichier.txt user@IP_SERVEUR:~
+```
+
+## Serveur → Client
+
+```bash
+scp user@IP_SERVEUR:/home/user/fichier.txt .
+```
+
+## Copier un dossier
+
+```bash
+scp -r dossier user@IP_SERVEUR:~
+```
+
+---
+
+# SFTP
+
+## Connexion
+
+```bash
+sftp user@IP_SERVEUR
+```
+
+## Commandes utiles
+
+```bash
+ls
+pwd
+put fichier.txt
+get fichier.txt
+exit
+```
+
+---
+
+# FAIL2BAN
+
+## Installation
+
+```bash
+apt install fail2ban -y
+```
+
+## Vérifier
+
+```bash
+systemctl status fail2ban
+```
+
+---
+
+# ALIAS SSH
+
+## Fichier
+
+```bash
+nano ~/.ssh/config
+```
+
+Exemple :
+
+```bash
+Host srv
+HostName 192.168.1.10
+User melissa
+Port 22
+```
+
+Connexion :
+
+```bash
+ssh srv
+```
+
+---
+
+# DÉPANNAGE EXAMEN
+
+```bash
+systemctl status ssh
+systemctl restart ssh
+
+ss -tulpn | grep ssh
+
+cat /etc/ssh/sshd_config
+
+journalctl -xe
+journalctl -u ssh
+
+ping IP_SERVEUR
+```
+
+---
+
+# À CONNAÎTRE PAR CŒUR
+
+```bash
+apt install openssh-server -y
+
+ssh user@IP
+
+ssh-keygen
+ssh-copy-id user@IP
+
+scp fichier user@IP:~
+
+sftp user@IP
+
+nano /etc/ssh/sshd_config
+
+systemctl restart ssh
+systemctl status ssh
+```
+
+## Ports
+
+```text
+SSH  = TCP 22
+SFTP = TCP 22
+SCP  = TCP 22
+```
