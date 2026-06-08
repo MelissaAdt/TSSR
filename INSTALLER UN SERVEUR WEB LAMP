@@ -1,0 +1,302 @@
+## ⚙️ **Installation du serveur Apache**
+
+### 🧩 **Contexte**
+
+Le **LAMP** (Linux, Apache, MySQL/MariaDB, PHP) est une pile de logiciels open source qui permet de créer, héberger et exécuter des **applications web dynamiques** 🌍.
+
+- 🐧 **Linux** → système d’exploitation du serveur
+- 🔥 **Apache** → serveur web qui gère les requêtes HTTP
+- 🗄️ **MySQL/MariaDB** → gestionnaire de base de données
+- 🧩 **PHP** → langage côté serveur pour les pages dynamiques
+
+Grâce à LAMP, tu peux :
+
+- créer des sites et applications web,
+- tester des pages dynamiques et statiques,
+- et déployer des environnements complets d’hébergement.
+
+### 🪄 **Méthode – Découvrez comment installer le serveur Apache**
+
+### **A. Mise à jour du système d’exploitation**
+
+**Étape 1 :**
+
+Ouvrir le **Terminal** → via le menu **Activités**.
+
+**Étape 2 :**
+
+Deux façons d’y accéder :
+
+- Rechercher “Terminal” dans la barre de recherche 🔍
+- Ou passer par **Utilitaires**
+
+**Étape 3 :**
+
+Une fois le terminal ouvert, c’est là que l’installation commence.
+
+**Étape 4 :**
+
+Mettre à jour la liste des paquets :
+
+```bash
+sudo apt-get update
+
+```
+
+**Étape 5 :**
+
+Mettre à jour les paquets déjà installés :
+
+```bash
+sudo apt-get upgrade
+
+```
+
+✅ Répondre “O” pour **oui** quand c’est demandé.
+
+---
+
+### **B. Installation d’Apache**
+
+**Étape 6 :**
+
+Installer le serveur web Apache :
+
+```bash
+sudo apt-get install apache2
+
+```
+
+✅ Répondre “O” pour confirmer l’installation.
+
+---
+
+### **C. Vérification du serveur**
+
+**Étape 7 :**
+
+Vérifier que le service Apache est actif :
+
+```bash
+systemctl status apache2
+
+```
+
+Le serveur doit être affiché comme **active (running)**.
+
+Faire `Ctrl + C` pour quitter l’affichage.
+
+**Étape 8 :**
+
+Trouver l’adresse IP du serveur :
+
+```bash
+ip a
+
+```
+
+Exemple : `10.0.2.15`
+
+**Étape 9 :**
+
+Ouvrir un navigateur et taper ton IP dans la barre d’adresse.
+
+Si tu vois la page **“Apache2 Debian Default Page”**, c’est gagné 🎉
+
+---
+
+## 💾 **Installation de PHP, MariaDB et MySQL**
+
+### 🪄 **Méthode – Découvrez comment installer PHP, MariaDB et MySQL**
+
+### **A. Installation des paquets du module PHP**
+
+**Étape 1 :**
+
+```bash
+sudo apt-get install php
+
+```
+
+✅ Répondre “O” puis Entrée.
+
+---
+
+### **B. Installation de l’extension cURL**
+
+**Étape 2 :**
+
+```bash
+sudo apt-get install curl
+
+```
+
+> 💡 L’extension cURL permet à PHP de communiquer avec d’autres serveurs via les protocoles HTTP, HTTPS, FTP, etc.
+> 
+
+---
+
+### **C. Installation du système de gestion de base de données MariaDB**
+
+**Étape 3 :**
+
+```bash
+sudo apt-get install mariadb-server
+
+```
+
+✅ Répondre “O” pour valider.
+
+---
+
+### **D. Sécurisation du serveur MariaDB**
+
+**Étape 4 :**
+
+À la place de la commande du cours, utiliser la version fonctionnelle :
+
+```bash
+sudo mariadb-secure-installation
+
+```
+
+👉 Suivre les instructions à l’écran :
+
+- Définir un mot de passe root → **Y**
+- Supprimer utilisateurs anonymes → **Y**
+- Interdire root distant → **Y**
+- Supprimer la base de test → **Y**
+- Recharger les privilèges → **Y**
+
+✅ Ton serveur MariaDB est maintenant sécurisé !
+
+---
+
+## 🧠 **Configuration de MariaDB**
+
+### 🪄 **Méthode – Découvrez comment configurer MariaDB**
+
+### **Étape 1 :**
+
+Connexion au serveur MariaDB :
+
+```bash
+sudo mariadb -u root -p
+
+```
+
+Entrer ton mot de passe défini précédemment.
+
+---
+
+### **Étape 2 : Créer une base de données de test**
+
+```sql
+CREATE DATABASE STUDITEST;
+
+```
+
+✅ Résultat : “Query OK” → la base est créée.
+
+---
+
+### **Étape 3 : Se connecter à cette base**
+
+```sql
+USE STUDITEST;
+
+```
+
+---
+
+### **Étape 4 : Créer une table de test**
+
+```sql
+CREATE TABLE test (msg TEXT);
+
+```
+
+---
+
+### **Étape 5 : Insérer une donnée dans la table**
+
+```sql
+INSERT INTO test VALUES ('coucou');
+
+```
+
+---
+
+### **Étape 6 : Vérifier que la donnée est bien présente**
+
+```sql
+SELECT * FROM test;
+
+```
+
+✅ Résultat attendu : la table affiche “coucou”.
+
+---
+
+### **Étape 7 : Quitter le client MariaDB**
+
+```sql
+QUIT;
+
+```
+
+---
+
+## 🧩 **Module PHP et vérification des versions**
+
+### 🪄 **Méthode – Découvrez le module PHP**
+
+**Étape 1 :**
+
+Aller dans le répertoire web :
+
+```bash
+cd /var/www/html
+
+```
+
+**Étape 2 :**
+
+Créer un fichier PHP de test :
+
+```bash
+touch test.php
+
+```
+
+**Étape 3 :**
+
+Éditer le fichier avec nano :
+
+```bash
+nano test.php
+
+```
+
+**Étape 4 :**
+
+Ajouter ce code :
+
+```php
+<?php
+phpinfo();
+?>
+
+```
+
+Puis sauvegarder avec `Ctrl + X`, `O`, `Entrée`.
+
+**Étape 5 :**
+
+Dans le navigateur, taper :
+
+```
+http://127.0.0.1/test.php
+
+```
+
