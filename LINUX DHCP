@@ -1,0 +1,164 @@
+# DHCP DEBIAN (ISC-DHCP-SERVER)
+
+## Vérifier la carte réseau
+
+```bash
+cat /etc/network/interfaces
+ip a
+```
+
+## Configurer une IP fixe
+
+```bash
+nano /etc/network/interfaces
+```
+
+```bash
+auto enp0s3
+iface enp0s3 inet static
+address 192.168.56.10
+netmask 255.255.255.0
+gateway 192.168.56.1
+dns-nameservers 8.8.8.8
+```
+
+## Redémarrer
+
+```bash
+reboot
+ip a
+```
+
+---
+
+# INSTALLATION DHCP
+
+```bash
+apt update
+apt install isc-dhcp-server -y
+```
+
+---
+
+# INTERFACE DHCP
+
+```bash
+nano /etc/default/isc-dhcp-server
+```
+
+```bash
+INTERFACESv4="enp0s3"
+INTERFACESv6=""
+```
+
+---
+
+# CONFIGURATION DHCP
+
+```bash
+nano /etc/dhcp/dhcpd.conf
+```
+
+```bash
+authoritative;
+default-lease-time 600;
+max-lease-time 7200;
+
+subnet 192.168.56.0 netmask 255.255.255.0 {
+range 192.168.56.25 192.168.56.35;
+option routers 192.168.56.1;
+option subnet-mask 255.255.255.0;
+option domain-name-servers 8.8.8.8;
+}
+```
+
+---
+
+# DÉMARRAGE / VÉRIFICATION
+
+```bash
+systemctl restart isc-dhcp-server
+systemctl status isc-dhcp-server
+```
+
+```bash
+journalctl -xe
+```
+
+---
+
+# RÉSERVATION DHCP
+
+## Trouver la MAC
+
+Windows
+
+```bash
+ipconfig /all
+```
+
+Linux
+
+```bash
+ip a
+```
+
+## Ajouter la réservation
+
+```bash
+nano /etc/dhcp/dhcpd.conf
+```
+
+```bash
+host pc-admin {
+hardware ethernet 08:00:27:d2:82:7b;
+fixed-address 192.168.56.30;
+}
+```
+
+## Redémarrer
+
+```bash
+systemctl restart isc-dhcp-server
+```
+
+---
+
+# RENOUVELER LE BAIL
+
+Windows
+
+```bash
+ipconfig /release
+ipconfig /renew
+```
+
+Linux
+
+```bash
+dhclient -r
+dhclient
+```
+
+---
+
+# COMMANDES EXAMEN
+
+```bash
+apt install isc-dhcp-server -y
+
+nano /etc/default/isc-dhcp-server
+nano /etc/dhcp/dhcpd.conf
+
+systemctl restart isc-dhcp-server
+systemctl status isc-dhcp-server
+
+ip a
+ipconfig /all
+
+ipconfig /release
+ipconfig /renew
+
+dhclient -r
+dhclient
+```
