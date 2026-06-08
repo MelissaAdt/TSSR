@@ -1,0 +1,15 @@
+| Windows | Linux | À quoi ça sert ? |
+
+| --- | --- | --- |
+
+| `ipconfig` | `ip a` | Voir l’IP, le masque, la passerelle |
+
+| `tracert` | `traceroute` | Suivre le chemin vers une IP |
+
+| `nslookup` | `dig` | Tester les serveurs DNS |
+
+| `netstat -an` | `netstat -an` | Voir les connexions et ports ouverts |
+
+| `arp -a` | `ip neigh` | Voir les adresses MAC associées aux IP |
+
+| `route print` | `ip route show` | Voir les routes réseau |
